@@ -11,14 +11,19 @@ export default function ScrollNav() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  return (
-    <style>{`
-      nav {
-        ${scrolled
-          ? 'background: rgba(255,255,255,0.85) !important; box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 4px 24px rgba(0,0,0,0.04) !important; border-color: rgba(0,0,0,0.04) !important;'
-          : ''}
-        transition: background 0.3s, box-shadow 0.3s, border-color 0.3s;
-      }
-    `}</style>
-  )
+  useEffect(() => {
+    const nav = document.querySelector('nav')
+    if (!nav) return
+    if (scrolled) {
+      nav.style.background = 'rgba(255,255,255,0.88)'
+      nav.style.boxShadow = '0 1px 0 rgba(0,0,0,0.04), 0 4px 24px rgba(0,0,0,0.05)'
+      nav.style.borderColor = 'rgba(0,0,0,0.04)'
+    } else {
+      nav.style.background = ''
+      nav.style.boxShadow = ''
+      nav.style.borderColor = ''
+    }
+  }, [scrolled])
+
+  return null
 }

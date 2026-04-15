@@ -31,14 +31,14 @@ export default async function Home() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative pt-14 pb-14 md:pt-20 md:pb-18 px-4 text-center overflow-hidden">
+      {/* Hero - full viewport landing */}
+      <section className="relative min-h-[85vh] md:min-h-[80vh] flex items-center justify-center px-4 text-center overflow-hidden">
         <HeroBackground />
         <AnimatedHero count={gemachs.length} />
       </section>
 
       {/* Directory */}
-      <section className="px-4 sm:px-6 pb-10 -mt-2">
+      <section id="directory" className="px-4 sm:px-6 pb-12">
         <div className="max-w-7xl mx-auto">
           <GemachDirectory gemachs={gemachs} />
         </div>

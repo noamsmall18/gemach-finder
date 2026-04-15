@@ -17,9 +17,6 @@ export default function GemachCard({ gemach, index, onSelect }: GemachCardProps)
   const accentColor = CATEGORY_ACCENT_COLORS[gemach.category] || '#94A3B8'
   const hasContact = gemach.contact_phone || gemach.contact_email || gemach.contact_website
 
-  // Show "New" badge for gemachs added in the last 7 days
-  const isNew = gemach.created_at && (Date.now() - new Date(gemach.created_at).getTime()) < 7 * 24 * 60 * 60 * 1000
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 16, scale: 0.97 }}
@@ -33,13 +30,6 @@ export default function GemachCard({ gemach, index, onSelect }: GemachCardProps)
       aria-label={`View details for ${gemach.name}`}
       className="relative bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-100 hover:border-slate-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(30,42,94,0.08),0_4px_12px_rgba(0,0,0,0.03)] transition-all duration-500 cursor-pointer group overflow-hidden focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-offset-2"
     >
-      {/* New badge */}
-      {isNew && (
-        <div className="absolute top-3 right-3 z-10 px-2 py-0.5 rounded-md bg-gold text-white text-[10px] font-bold uppercase tracking-wider shadow-sm">
-          New
-        </div>
-      )}
-
       {/* Category accent bar with gradient */}
       <div className="h-[3px] w-full" style={{ background: `linear-gradient(90deg, ${accentColor}, ${accentColor}55, transparent)` }} />
 

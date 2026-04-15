@@ -66,12 +66,7 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: '100%' }}
             transition={{ type: 'spring', damping: 32, stiffness: 320 }}
-            drag="y"
-            dragConstraints={{ top: 0 }}
-            dragElastic={{ top: 0, bottom: 0.4 }}
-            onDragEnd={(_, info) => { if (info.offset.y > 100) onClose() }}
-            className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-xl md:w-[calc(100%-2rem)] md:max-h-[85vh] overflow-y-auto overscroll-contain modal-scroll md:!transform-none"
-            style={{ touchAction: 'pan-y' }}
+            className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-xl md:w-[calc(100%-2rem)] md:max-h-[85vh] overflow-y-auto overscroll-contain modal-scroll"
           >
             <div className="bg-white rounded-t-[28px] md:rounded-[24px] shadow-[0_-8px_40px_rgba(0,0,0,0.15)] md:shadow-[0_24px_80px_rgba(0,0,0,0.2)] overflow-hidden">
               {/* Colored header */}
