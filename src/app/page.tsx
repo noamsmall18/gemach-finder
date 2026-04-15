@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import GemachDirectory from '@/components/GemachDirectory'
 import SuggestForm from '@/components/SuggestForm'
 import Footer from '@/components/Footer'
+import HeroBadge from '@/components/HeroBadge'
 import type { Gemach } from '@/lib/types'
 
 async function getGemachs(): Promise<Gemach[]> {
@@ -31,19 +32,11 @@ export default async function Home() {
     <>
       {/* Hero */}
       <section className="relative pt-14 pb-10 px-4 text-center overflow-hidden">
-        {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-cream via-cream to-white pointer-events-none" />
-        {/* Subtle radial glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-radial from-gold/[0.04] to-transparent rounded-full pointer-events-none" />
 
         <div className="relative max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-navy/5 text-navy text-xs font-medium mb-5">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sage opacity-75" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-sage" />
-            </span>
-            {gemachs.length} gemachs across Bergen County
-          </div>
+          <HeroBadge count={gemachs.length} />
           <h1 className="font-heading text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-slate-800 leading-[1.15] tracking-tight">
             Find What You Need.{' '}
             <span className="text-navy">Borrow It Free.</span>

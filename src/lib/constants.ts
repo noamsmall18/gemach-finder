@@ -34,6 +34,18 @@ export const CATEGORY_COLORS: Record<string, { text: string; bg: string }> = {
   'Other': { text: 'text-slate-600', bg: 'bg-slate-100' },
 }
 
+export const CATEGORY_ACCENT_COLORS: Record<string, string> = {
+  'Baby & Kids': '#D4A017',
+  'Medical Equipment': '#4A7C6F',
+  'Simcha & Events': '#9B6B9E',
+  'Clothing': '#C2724F',
+  'Household': '#8B7355',
+  'Financial/Loans': '#2D3A6E',
+  'Food': '#B8860B',
+  'Seforim & Judaica': '#6B8FA8',
+  'Other': '#64748B',
+}
+
 export function getCategoryEmoji(category: string): string {
   return CATEGORIES.find(c => c.name === category)?.emoji || '🤝'
 }

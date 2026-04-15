@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Phone, Mail, Globe, MapPin, Clock, User, FileText, ExternalLink } from 'lucide-react'
+import { X, Phone, Mail, Globe, MapPin, Clock, User, FileText, ExternalLink, AlertCircle } from 'lucide-react'
 import type { Gemach } from '@/lib/types'
-import { getCategoryEmoji, getCategoryColors } from '@/lib/constants'
+import { getCategoryEmoji, getCategoryColors, CATEGORY_ACCENT_COLORS } from '@/lib/constants'
 
 interface GemachDetailModalProps {
   gemach: Gemach | null
@@ -12,7 +12,6 @@ interface GemachDetailModalProps {
 }
 
 export default function GemachDetailModal({ gemach, onClose }: GemachDetailModalProps) {
-  // Lock body scroll when open
   useEffect(() => {
     if (gemach) {
       document.body.style.overflow = 'hidden'
@@ -20,7 +19,6 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
     }
   }, [gemach])
 
-  // Close on escape
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
@@ -31,6 +29,8 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
 
   const colors = gemach ? getCategoryColors(gemach.category) : null
   const emoji = gemach ? getCategoryEmoji(gemach.category) : ''
+  const accentColor = gemach ? (CATEGORY_ACCENT_COLORS[gemach.category] || '#64748B') : '#64748B'
+  const hasContact = gemach && (gemach.contact_phone || gemach.contact_email || gemach.contact_website)
 
   return (
     <AnimatePresence>
@@ -54,7 +54,13 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
             className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-lg md:w-[calc(100%-2rem)] md:max-h-[85vh] overflow-y-auto overscroll-contain"
           >
-            <div className="bg-white rounded-t-3xl md:rounded-3xl shadow-2xl">
+            <div className="bg-white rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden">
+              {/* Colored header bar */}
+              <div
+                className="h-1.5 w-full"
+                style={{ background: `linear-gradient(90deg, ${accentColor}, ${accentColor}66)` }}
+              />
+
               {/* Drag handle (mobile) */}
               <div className="flex justify-center pt-3 md:hidden">
                 <div className="w-10 h-1 rounded-full bg-slate-200" />
@@ -87,62 +93,72 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
                 </h2>
 
                 {/* Description */}
-                <p className="text-slate-600 mt-3 leading-relaxed">
+                <p className="text-slate-600 mt-3 leading-relaxed text-[15px]">
                   {gemach.description}
                 </p>
 
                 {/* Contact Buttons */}
-                <div className="mt-6 space-y-2.5">
-                  {gemach.contact_phone && (
-                    <a
-                      href={`tel:${gemach.contact_phone.replace(/[^+\d]/g, '')}`}
-                      className="flex items-center gap-3 w-full px-4 py-3.5 rounded-2xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors font-medium"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
-                        <Phone className="w-5 h-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-xs text-emerald-600/70 font-normal">Call or Text</div>
-                        <div className="text-sm truncate">{gemach.contact_phone}</div>
-                      </div>
-                      <ExternalLink className="w-4 h-4 ml-auto shrink-0 opacity-40" />
-                    </a>
-                  )}
+                {hasContact ? (
+                  <div className="mt-6 space-y-2.5">
+                    {gemach.contact_phone && (
+                      <a
+                        href={`tel:${gemach.contact_phone.replace(/[^+\d]/g, '')}`}
+                        className="flex items-center gap-3 w-full px-4 py-3.5 rounded-2xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 active:scale-[0.98] transition-all font-medium"
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+                          <Phone className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-xs text-emerald-600/70 font-normal">Call or Text</div>
+                          <div className="text-sm truncate">{gemach.contact_phone}</div>
+                        </div>
+                        <ExternalLink className="w-4 h-4 ml-auto shrink-0 opacity-40" />
+                      </a>
+                    )}
 
-                  {gemach.contact_email && (
-                    <a
-                      href={`mailto:${gemach.contact_email}`}
-                      className="flex items-center gap-3 w-full px-4 py-3.5 rounded-2xl bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors font-medium"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
-                        <Mail className="w-5 h-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-xs text-blue-600/70 font-normal">Email</div>
-                        <div className="text-sm truncate">{gemach.contact_email}</div>
-                      </div>
-                      <ExternalLink className="w-4 h-4 ml-auto shrink-0 opacity-40" />
-                    </a>
-                  )}
+                    {gemach.contact_email && (
+                      <a
+                        href={`mailto:${gemach.contact_email}`}
+                        className="flex items-center gap-3 w-full px-4 py-3.5 rounded-2xl bg-blue-50 text-blue-700 hover:bg-blue-100 active:scale-[0.98] transition-all font-medium"
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+                          <Mail className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-xs text-blue-600/70 font-normal">Email</div>
+                          <div className="text-sm truncate">{gemach.contact_email}</div>
+                        </div>
+                        <ExternalLink className="w-4 h-4 ml-auto shrink-0 opacity-40" />
+                      </a>
+                    )}
 
-                  {gemach.contact_website && (
-                    <a
-                      href={gemach.contact_website.startsWith('http') ? gemach.contact_website : `https://${gemach.contact_website}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 w-full px-4 py-3.5 rounded-2xl bg-navy/5 text-navy hover:bg-navy/10 transition-colors font-medium"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-navy/10 flex items-center justify-center shrink-0">
-                        <Globe className="w-5 h-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="text-xs text-navy/50 font-normal">Website</div>
-                        <div className="text-sm truncate">{gemach.contact_website.replace(/^https?:\/\//, '')}</div>
-                      </div>
-                      <ExternalLink className="w-4 h-4 ml-auto shrink-0 opacity-40" />
-                    </a>
-                  )}
-                </div>
+                    {gemach.contact_website && (
+                      <a
+                        href={gemach.contact_website.startsWith('http') ? gemach.contact_website : `https://${gemach.contact_website}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 w-full px-4 py-3.5 rounded-2xl bg-navy/5 text-navy hover:bg-navy/10 active:scale-[0.98] transition-all font-medium"
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-navy/10 flex items-center justify-center shrink-0">
+                          <Globe className="w-5 h-5" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="text-xs text-navy/50 font-normal">Website</div>
+                          <div className="text-sm truncate">{gemach.contact_website.replace(/^https?:\/\//, '')}</div>
+                        </div>
+                        <ExternalLink className="w-4 h-4 ml-auto shrink-0 opacity-40" />
+                      </a>
+                    )}
+                  </div>
+                ) : (
+                  <div className="mt-6 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-amber-50/80 text-amber-700">
+                    <AlertCircle className="w-4.5 h-4.5 shrink-0" />
+                    <div className="text-sm">
+                      <span className="font-medium">Limited contact info.</span>{' '}
+                      {gemach.notes ? 'See notes below for details.' : 'Check community boards for current contact.'}
+                    </div>
+                  </div>
+                )}
 
                 {/* Details Section */}
                 {(gemach.contact_name || gemach.address || gemach.hours || gemach.notes) && (
