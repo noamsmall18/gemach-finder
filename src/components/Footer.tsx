@@ -1,4 +1,4 @@
-import { Heart } from 'lucide-react'
+import { Heart, ArrowUp } from 'lucide-react'
 
 interface FooterProps {
   gemachCount: number
@@ -20,30 +20,39 @@ export default function Footer({ gemachCount }: FooterProps) {
         </svg>
       </div>
 
-      <div className="bg-gradient-to-b from-navy to-navy-deep text-cream/90 py-10 px-4">
-        <div className="max-w-6xl mx-auto text-center space-y-4">
-          <div className="flex items-center justify-center gap-1.5 text-sm">
-            <span>{gemachCount} gemachs listed</span>
-            <Heart className="w-3.5 h-3.5 text-gold fill-gold" />
+      <div className="bg-gradient-to-b from-navy to-navy-deep text-cream/90 py-12 px-4">
+        <div className="max-w-6xl mx-auto">
+          {/* Main content */}
+          <div className="text-center space-y-5">
+            <div className="flex items-center justify-center gap-2 text-base font-medium">
+              <span>{gemachCount} verified gemachs</span>
+              <Heart className="w-4 h-4 text-gold fill-gold" />
+            </div>
+
+            <p className="text-sm text-cream/40 max-w-md mx-auto">
+              Built by Noam Small as a community resource for Bergen County.
+              Every listing is verified with real contact information.
+            </p>
+
+            <div className="flex items-center justify-center gap-5 text-sm pt-1">
+              <a href="#suggest" className="text-gold hover:text-gold-bright transition-colors font-medium">
+                + Suggest a Gemach
+              </a>
+              <span className="text-cream/15">|</span>
+              <a href="#top" className="text-cream/40 hover:text-cream transition-colors inline-flex items-center gap-1">
+                <ArrowUp className="w-3.5 h-3.5" />
+                Back to top
+              </a>
+            </div>
           </div>
 
-          <p className="text-sm text-cream/50">
-            Built by Noam Small as a community resource for Bergen County
-          </p>
-
-          <div className="flex items-center justify-center gap-4 text-sm">
-            <a href="#suggest" className="text-gold hover:text-gold-bright transition-colors">
-              Suggest a Gemach
-            </a>
-            <span className="text-cream/20">|</span>
-            <a href="#top" className="text-cream/50 hover:text-cream transition-colors">
-              Back to top
-            </a>
+          {/* Bottom disclaimer */}
+          <div className="mt-8 pt-5 border-t border-cream/[0.06] text-center">
+            <p className="text-[11px] text-cream/25 max-w-lg mx-auto leading-relaxed">
+              Data is community-sourced and verified. Contact info may change over time.
+              Please verify details before visiting. Last updated April 15, 2026.
+            </p>
           </div>
-
-          <p className="text-xs text-cream/30 max-w-lg mx-auto">
-            Data is community-sourced. Contact info may change. Please verify before visiting.
-          </p>
         </div>
       </div>
     </footer>

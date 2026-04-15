@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Check, Send } from 'lucide-react'
+import { Check, Send, Sparkles } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { CATEGORIES } from '@/lib/constants'
 
@@ -49,127 +49,137 @@ export default function SuggestForm() {
   }
 
   return (
-    <section id="suggest" className="py-16 px-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 md:p-10 border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]">
+    <section id="suggest" className="py-16 px-4 relative">
+      {/* Subtle background accent */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/[0.02] to-transparent pointer-events-none" />
+
+      <div className="relative max-w-2xl mx-auto">
+        <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 md:p-10 border border-white/40 shadow-[0_8px_40px_rgba(0,0,0,0.04)]">
           <AnimatePresence mode="wait">
             {submitted ? (
               <motion.div
                 key="success"
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                className="text-center py-8"
+                className="text-center py-10"
               >
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ type: 'spring', delay: 0.2 }}
-                  className="w-16 h-16 bg-sage/10 rounded-full flex items-center justify-center mx-auto"
+                  transition={{ type: 'spring', delay: 0.2, stiffness: 200 }}
+                  className="w-20 h-20 bg-sage/10 rounded-2xl flex items-center justify-center mx-auto"
                 >
-                  <Check className="w-8 h-8 text-sage" />
+                  <Check className="w-10 h-10 text-sage" />
                 </motion.div>
-                <h3 className="font-heading text-xl font-semibold mt-4 text-slate-800">Thank you!</h3>
-                <p className="text-slate-500 mt-2">
-                  Your suggestion has been submitted. We&apos;ll review it and add it to the directory soon.
+                <h3 className="font-heading text-2xl font-semibold mt-5 text-slate-800">Thank you!</h3>
+                <p className="text-slate-500 mt-2 max-w-sm mx-auto">
+                  Your suggestion has been submitted. We&apos;ll verify the info and add it to the directory soon.
                 </p>
                 <button
                   onClick={() => {
                     setSubmitted(false)
                     setForm({ gemach_name: '', category: '', description: '', contact_info: '', submitted_by: '' })
                   }}
-                  className="mt-4 text-sm text-navy hover:underline"
+                  className="mt-5 text-sm font-medium text-navy hover:underline"
                 >
                   Submit another
                 </button>
               </motion.div>
             ) : (
               <motion.div key="form" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <h2 className="font-heading text-2xl font-semibold text-slate-800">
-                  Know a gemach we&apos;re missing?
-                </h2>
-                <p className="text-slate-500 mt-2">
-                  Help us grow this directory. Submit a gemach and we&apos;ll review it.
+                <div className="flex items-center gap-2 mb-1">
+                  <Sparkles className="w-5 h-5 text-gold" />
+                  <h2 className="font-heading text-2xl font-semibold text-slate-800">
+                    Know a gemach we&apos;re missing?
+                  </h2>
+                </div>
+                <p className="text-slate-500 mt-1.5 ml-7">
+                  Help us grow this directory. Every suggestion is reviewed and verified.
                 </p>
 
-                <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Gemach Name <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={form.gemach_name}
-                      onChange={(e) => setForm({ ...form, gemach_name: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-1 focus:ring-navy/10 transition-all"
-                      placeholder="e.g. Teaneck Toy Gemach"
-                    />
+                <form onSubmit={handleSubmit} className="mt-7 space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                        Gemach Name <span className="text-red-400">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={form.gemach_name}
+                        onChange={(e) => setForm({ ...form, gemach_name: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-2 focus:ring-navy/5 transition-all"
+                        placeholder="e.g. Teaneck Toy Gemach"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                        Category <span className="text-red-400">*</span>
+                      </label>
+                      <select
+                        value={form.category}
+                        onChange={(e) => setForm({ ...form, category: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-2 focus:ring-navy/5 transition-all"
+                      >
+                        <option value="">Select a category</option>
+                        {CATEGORIES.map((cat) => (
+                          <option key={cat.name} value={cat.name}>
+                            {cat.emoji} {cat.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Category <span className="text-red-400">*</span>
-                    </label>
-                    <select
-                      value={form.category}
-                      onChange={(e) => setForm({ ...form, category: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-1 focus:ring-navy/10 transition-all"
-                    >
-                      <option value="">Select a category</option>
-                      {CATEGORIES.map((cat) => (
-                        <option key={cat.name} value={cat.name}>
-                          {cat.emoji} {cat.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">
                       Description <span className="text-red-400">*</span>
                     </label>
                     <textarea
                       value={form.description}
                       onChange={(e) => setForm({ ...form, description: e.target.value })}
                       rows={3}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-1 focus:ring-navy/10 transition-all resize-none"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-2 focus:ring-navy/5 transition-all resize-none"
                       placeholder="What do they lend or offer?"
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Contact Info <span className="text-red-400">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={form.contact_info}
-                      onChange={(e) => setForm({ ...form, contact_info: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-1 focus:ring-navy/10 transition-all"
-                      placeholder="Phone number, email, or website"
-                    />
-                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                        Contact Info <span className="text-red-400">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={form.contact_info}
+                        onChange={(e) => setForm({ ...form, contact_info: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-2 focus:ring-navy/5 transition-all"
+                        placeholder="Phone, email, or website"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                      Your Name <span className="text-slate-400">(optional)</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={form.submitted_by}
-                      onChange={(e) => setForm({ ...form, submitted_by: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-1 focus:ring-navy/10 transition-all"
-                      placeholder="So we can follow up if needed"
-                    />
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                        Your Name <span className="text-slate-400 font-normal">(optional)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={form.submitted_by}
+                        onChange={(e) => setForm({ ...form, submitted_by: e.target.value })}
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-2 focus:ring-navy/5 transition-all"
+                        placeholder="So we can follow up"
+                      />
+                    </div>
                   </div>
 
                   {error && (
-                    <p className="text-sm text-red-500">{error}</p>
+                    <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
                   )}
 
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-navy to-navy-deep text-white rounded-xl font-medium hover:shadow-lg hover:shadow-navy/20 transition-all duration-200 disabled:opacity-60"
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3.5 bg-gradient-to-r from-navy to-navy-deep text-white rounded-xl font-medium hover:shadow-lg hover:shadow-navy/20 active:scale-[0.99] transition-all duration-200 disabled:opacity-60"
                   >
                     {submitting ? (
                       <span>Submitting...</span>

@@ -15,6 +15,8 @@ export const LOCATIONS = [
   'Bergenfield',
   'Englewood',
   'Fair Lawn',
+  'Hackensack',
+  'Passaic',
   'Paramus',
   'New Milford',
   'Bergen County-wide',
