@@ -51,7 +51,7 @@ export default function SuggestForm() {
   return (
     <section id="suggest" className="py-16 px-4">
       <div className="max-w-2xl mx-auto">
-        <div className="bg-gold-soft/40 rounded-3xl p-8 md:p-10">
+        <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 md:p-10 border border-white/40 shadow-[0_8px_32px_rgba(0,0,0,0.04)]">
           <AnimatePresence mode="wait">
             {submitted ? (
               <motion.div
@@ -100,7 +100,7 @@ export default function SuggestForm() {
                       type="text"
                       value={form.gemach_name}
                       onChange={(e) => setForm({ ...form, gemach_name: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white outline-none focus:border-navy transition-colors"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-1 focus:ring-navy/10 transition-all"
                       placeholder="e.g. Teaneck Toy Gemach"
                     />
                   </div>
@@ -112,7 +112,7 @@ export default function SuggestForm() {
                     <select
                       value={form.category}
                       onChange={(e) => setForm({ ...form, category: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white outline-none focus:border-navy transition-colors"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-1 focus:ring-navy/10 transition-all"
                     >
                       <option value="">Select a category</option>
                       {CATEGORIES.map((cat) => (
@@ -131,7 +131,7 @@ export default function SuggestForm() {
                       value={form.description}
                       onChange={(e) => setForm({ ...form, description: e.target.value })}
                       rows={3}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white outline-none focus:border-navy transition-colors resize-none"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-1 focus:ring-navy/10 transition-all resize-none"
                       placeholder="What do they lend or offer?"
                     />
                   </div>
@@ -144,7 +144,7 @@ export default function SuggestForm() {
                       type="text"
                       value={form.contact_info}
                       onChange={(e) => setForm({ ...form, contact_info: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white outline-none focus:border-navy transition-colors"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-1 focus:ring-navy/10 transition-all"
                       placeholder="Phone number, email, or website"
                     />
                   </div>
@@ -157,7 +157,7 @@ export default function SuggestForm() {
                       type="text"
                       value={form.submitted_by}
                       onChange={(e) => setForm({ ...form, submitted_by: e.target.value })}
-                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white outline-none focus:border-navy transition-colors"
+                      className="w-full px-4 py-2.5 rounded-xl border border-slate-200/80 bg-white/80 backdrop-blur-sm outline-none focus:border-navy focus:ring-1 focus:ring-navy/10 transition-all"
                       placeholder="So we can follow up if needed"
                     />
                   </div>
@@ -169,7 +169,7 @@ export default function SuggestForm() {
                   <button
                     type="submit"
                     disabled={submitting}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-navy text-white rounded-xl font-medium hover:bg-navy-deep transition-colors disabled:opacity-60"
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-navy to-navy-deep text-white rounded-xl font-medium hover:shadow-lg hover:shadow-navy/20 transition-all duration-200 disabled:opacity-60"
                   >
                     {submitting ? (
                       <span>Submitting...</span>

@@ -21,6 +21,8 @@ body {
   background-color: var(--color-cream);
   color: #1E293B;
   font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -39,4 +41,17 @@ h1, h2, h3, h4, h5, h6 {
 /* Smooth scroll for anchor links */
 html {
   scroll-behavior: smooth;
+}
+
+/* Glass effect utility */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* Subtle selection color */
+::selection {
+  background-color: rgba(45, 58, 110, 0.12);
+  color: #1E293B;
 }

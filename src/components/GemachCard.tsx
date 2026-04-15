@@ -1,32 +1,32 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Phone, Mail, Globe, MapPin, ChevronDown, ChevronUp } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Phone, Mail, Globe, MapPin } from 'lucide-react'
 import type { Gemach } from '@/lib/types'
 import { getCategoryEmoji, getCategoryColors } from '@/lib/constants'
 
 interface GemachCardProps {
   gemach: Gemach
   index: number
+  onSelect: (gemach: Gemach) => void
 }
 
-export default function GemachCard({ gemach, index }: GemachCardProps) {
-  const [expanded, setExpanded] = useState(false)
+export default function GemachCard({ gemach, index, onSelect }: GemachCardProps) {
   const colors = getCategoryColors(gemach.category)
   const emoji = getCategoryEmoji(gemach.category)
-
-  const hasExpandableContent = gemach.address || gemach.hours || gemach.notes || gemach.contact_name
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04, duration: 0.3 }}
-      whileHover={{ y: -4 }}
-      className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-lg transition-shadow duration-300 cursor-pointer group"
-      onClick={() => hasExpandableContent && setExpanded(!expanded)}
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      onClick={() => onSelect(gemach)}
+      className="relative bg-white/70 backdrop-blur-sm rounded-2xl p-5 border border-slate-100/80 shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(45,58,110,0.1)] transition-all duration-300 cursor-pointer group overflow-hidden"
     >
+      {/* Hover gradient border effect */}
+      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none border border-navy/10" />
+
       {/* Header: category badge + location */}
       <div className="flex items-start justify-between gap-2 mb-3">
         <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${colors.bg} ${colors.text}`}>
@@ -39,98 +39,39 @@ export default function GemachCard({ gemach, index }: GemachCardProps) {
       </div>
 
       {/* Title */}
-      <h3 className="font-heading text-lg font-semibold text-slate-800 group-hover:text-navy transition-colors leading-snug">
+      <h3 className="font-heading text-lg font-semibold text-slate-800 group-hover:text-navy transition-colors duration-200 leading-snug">
         {gemach.name}
       </h3>
 
       {/* Description */}
-      <p className={`text-sm text-slate-500 mt-2 leading-relaxed ${expanded ? '' : 'line-clamp-2'}`}>
+      <p className="text-sm text-slate-500 mt-2 leading-relaxed line-clamp-2">
         {gemach.description}
       </p>
 
-      {/* Contact buttons */}
-      <div className="flex items-center gap-2 mt-4 flex-wrap">
+      {/* Contact indicators */}
+      <div className="flex items-center gap-2 mt-4 pt-3 border-t border-slate-50">
         {gemach.contact_phone && (
-          <a
-            href={`tel:${gemach.contact_phone.replace(/[^+\d]/g, '')}`}
-            onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
-          >
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50/80 text-emerald-600">
             <Phone className="w-3 h-3" />
-            {gemach.contact_phone}
-          </a>
+            Call
+          </span>
         )}
         {gemach.contact_email && (
-          <a
-            href={`mailto:${gemach.contact_email}`}
-            onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
-          >
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50/80 text-blue-600">
             <Mail className="w-3 h-3" />
             Email
-          </a>
+          </span>
         )}
         {gemach.contact_website && (
-          <a
-            href={gemach.contact_website.startsWith('http') ? gemach.contact_website : `https://${gemach.contact_website}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-navy/5 text-navy hover:bg-navy/10 transition-colors"
-          >
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-navy/5 text-navy/70">
             <Globe className="w-3 h-3" />
-            Website
-          </a>
+            Web
+          </span>
         )}
-        {hasExpandableContent && (
-          <button
-            onClick={(e) => { e.stopPropagation(); setExpanded(!expanded) }}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium bg-slate-50 text-slate-500 hover:bg-slate-100 transition-colors ml-auto"
-          >
-            {expanded ? (
-              <>Less <ChevronUp className="w-3 h-3" /></>
-            ) : (
-              <>More <ChevronDown className="w-3 h-3" /></>
-            )}
-          </button>
-        )}
+        <span className="ml-auto text-xs text-slate-300 group-hover:text-navy/40 transition-colors">
+          Tap for details
+        </span>
       </div>
-
-      {/* Expanded details */}
-      <AnimatePresence>
-        {expanded && hasExpandableContent && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="overflow-hidden"
-          >
-            <div className="mt-4 pt-4 border-t border-slate-100 space-y-2 text-sm">
-              {gemach.contact_name && (
-                <div className="text-slate-600">
-                  <span className="font-medium text-slate-700">Contact:</span> {gemach.contact_name}
-                </div>
-              )}
-              {gemach.address && (
-                <div className="text-slate-600">
-                  <span className="font-medium text-slate-700">Address:</span> {gemach.address}
-                </div>
-              )}
-              {gemach.hours && (
-                <div className="text-slate-600">
-                  <span className="font-medium text-slate-700">Hours:</span> {gemach.hours}
-                </div>
-              )}
-              {gemach.notes && (
-                <div className="text-slate-600">
-                  <span className="font-medium text-slate-700">Notes:</span> {gemach.notes}
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   )
 }

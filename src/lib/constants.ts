@@ -19,6 +19,7 @@ export const LOCATIONS = [
   'New Milford',
   'Bergen County-wide',
   'Teaneck & Bergenfield',
+  'Other',
 ] as const
 
 export const CATEGORY_COLORS: Record<string, { text: string; bg: string }> = {

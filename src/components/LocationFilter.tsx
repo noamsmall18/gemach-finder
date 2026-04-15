@@ -15,7 +15,7 @@ export default function LocationFilter({ selected, onSelect }: LocationFilterPro
       <select
         value={selected || ''}
         onChange={(e) => onSelect(e.target.value || null)}
-        className="appearance-none pl-9 pr-8 py-2 rounded-full text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:border-navy/30 transition-all duration-200 cursor-pointer outline-none focus:border-navy"
+        className="appearance-none pl-9 pr-8 py-2 rounded-full text-sm font-medium bg-white/80 backdrop-blur-sm border border-slate-200/80 text-slate-600 hover:border-navy/30 transition-all duration-200 cursor-pointer outline-none focus:border-navy"
       >
         <option value="">All Locations</option>
         {LOCATIONS.map((loc) => (

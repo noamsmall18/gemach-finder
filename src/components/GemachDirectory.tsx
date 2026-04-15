@@ -5,6 +5,7 @@ import SearchBar from './SearchBar'
 import CategoryFilter from './CategoryFilter'
 import LocationFilter from './LocationFilter'
 import GemachCard from './GemachCard'
+import GemachDetailModal from './GemachDetailModal'
 import EmptyState from './EmptyState'
 import type { Gemach } from '@/lib/types'
 
@@ -17,6 +18,7 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
   const [category, setCategory] = useState<string | null>(null)
   const [location, setLocation] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<'name' | 'category' | 'location'>('name')
+  const [selectedGemach, setSelectedGemach] = useState<Gemach | null>(null)
 
   const filtered = useMemo(() => {
     let results = gemachs
@@ -42,9 +44,7 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
     if (location) {
       results = results.filter((g) => {
         if (g.location === location) return true
-        // "Teaneck & Bergenfield" should match both Teaneck and Bergenfield filters
         if (g.location === 'Teaneck & Bergenfield' && (location === 'Teaneck' || location === 'Bergenfield')) return true
-        // "Bergen County-wide" should match all location filters
         if (g.location === 'Bergen County-wide') return true
         return false
       })
@@ -78,7 +78,7 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'name' | 'category' | 'location')}
-            className="appearance-none px-3 py-2 rounded-full text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:border-navy/30 transition-all duration-200 cursor-pointer outline-none focus:border-navy"
+            className="appearance-none px-3 py-2 rounded-full text-sm font-medium bg-white/80 backdrop-blur-sm border border-slate-200/80 text-slate-600 hover:border-navy/30 transition-all duration-200 cursor-pointer outline-none focus:border-navy"
           >
             <option value="name">Sort by Name</option>
             <option value="category">Sort by Category</option>
@@ -94,12 +94,23 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
       {filtered.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
           {filtered.map((gemach, i) => (
-            <GemachCard key={gemach.id} gemach={gemach} index={i} />
+            <GemachCard
+              key={gemach.id}
+              gemach={gemach}
+              index={i}
+              onSelect={setSelectedGemach}
+            />
           ))}
         </div>
       ) : (
         <EmptyState query={search} />
       )}
+
+      {/* Detail Modal */}
+      <GemachDetailModal
+        gemach={selectedGemach}
+        onClose={() => setSelectedGemach(null)}
+      />
     </div>
   )
 }
