@@ -17,6 +17,7 @@ export const LOCATIONS = [
   'Fair Lawn',
   'Hackensack',
   'Passaic',
+  'Clifton',
   'Paramus',
   'New Milford',
   'Bergen County-wide',
