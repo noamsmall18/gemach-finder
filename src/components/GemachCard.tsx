@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Phone, Mail, Globe, MapPin, AlertCircle } from 'lucide-react'
+import { Phone, Mail, Globe, MapPin, AlertCircle, ChevronRight } from 'lucide-react'
 import type { Gemach } from '@/lib/types'
 import { getCategoryEmoji, getCategoryColors, CATEGORY_ACCENT_COLORS } from '@/lib/constants'
 
@@ -19,73 +19,75 @@ export default function GemachCard({ gemach, index, onSelect }: GemachCardProps)
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.04, duration: 0.3 }}
-      whileHover={{ y: -6, transition: { type: 'spring', stiffness: 400, damping: 25 } }}
+      initial={{ opacity: 0, y: 16, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ delay: index * 0.03, duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
+      whileHover={{ y: -4, transition: { type: 'spring', stiffness: 400, damping: 30 } }}
       onClick={() => onSelect(gemach)}
-      className="relative bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-100/80 shadow-[0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(45,58,110,0.12)] transition-all duration-300 cursor-pointer group overflow-hidden"
+      className="relative bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-100 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_rgba(30,42,94,0.08),0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-500 cursor-pointer group overflow-hidden"
     >
-      {/* Category accent bar */}
-      <div
-        className="h-1 w-full rounded-t-2xl"
-        style={{ background: `linear-gradient(90deg, ${accentColor}, ${accentColor}88)` }}
-      />
+      {/* Category accent bar with gradient */}
+      <div className="h-[3px] w-full" style={{ background: `linear-gradient(90deg, ${accentColor}, ${accentColor}55, transparent)` }} />
 
-      <div className="p-5 pt-4">
-        {/* Header: category badge + location */}
-        <div className="flex items-start justify-between gap-2 mb-3">
-          <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold ${colors.bg} ${colors.text}`}>
-            <span>{emoji}</span> {gemach.category}
+      <div className="p-5 md:p-6">
+        {/* Header row */}
+        <div className="flex items-start justify-between gap-2 mb-3.5">
+          <span
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold tracking-wide uppercase"
+            style={{
+              backgroundColor: `${accentColor}0D`,
+              color: accentColor,
+            }}
+          >
+            <span className="text-sm not-italic normal-case">{emoji}</span>
+            <span className="text-[10px]">{gemach.category}</span>
           </span>
-          <span className="flex items-center gap-1 text-xs text-slate-400 shrink-0">
+          <span className="flex items-center gap-1 text-[11px] text-slate-400 shrink-0 font-medium">
             <MapPin className="w-3 h-3" />
             {gemach.location}
           </span>
         </div>
 
         {/* Title */}
-        <h3 className="font-heading text-lg font-semibold text-slate-800 group-hover:text-navy transition-colors duration-200 leading-snug">
+        <h3 className="font-heading text-[17px] md:text-lg font-bold text-slate-800 group-hover:text-navy transition-colors duration-300 leading-snug">
           {gemach.name}
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-slate-500 mt-2 leading-relaxed line-clamp-2">
+        <p className="text-[13px] md:text-sm text-slate-500 mt-2 leading-relaxed line-clamp-2">
           {gemach.description}
         </p>
 
-        {/* Contact indicators */}
-        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-slate-100/60">
+        {/* Footer bar */}
+        <div className="flex items-center gap-1.5 mt-4 pt-3.5 border-t border-slate-50">
           {hasContact ? (
-            <>
+            <div className="flex items-center gap-1.5">
               {gemach.contact_phone && (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50/80 text-emerald-600">
-                  <Phone className="w-3 h-3" />
-                  Call
+                <span className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center">
+                  <Phone className="w-3.5 h-3.5 text-emerald-500" />
                 </span>
               )}
               {gemach.contact_email && (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50/80 text-blue-600">
-                  <Mail className="w-3 h-3" />
-                  Email
+                <span className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
+                  <Mail className="w-3.5 h-3.5 text-blue-500" />
                 </span>
               )}
               {gemach.contact_website && (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-navy/5 text-navy/70">
-                  <Globe className="w-3 h-3" />
-                  Web
+                <span className="w-7 h-7 rounded-lg bg-slate-50 flex items-center justify-center">
+                  <Globe className="w-3.5 h-3.5 text-slate-400" />
                 </span>
               )}
-            </>
+            </div>
           ) : (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-600">
+            <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-500">
               <AlertCircle className="w-3 h-3" />
               Limited Info
             </span>
           )}
-          <span className="ml-auto text-[11px] text-slate-300 group-hover:text-navy/40 transition-colors">
-            Tap for details
-          </span>
+          <div className="ml-auto flex items-center gap-0.5 text-[11px] text-slate-300 group-hover:text-navy/50 transition-colors duration-300 font-medium">
+            <span className="hidden sm:inline">Details</span>
+            <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-300" />
+          </div>
         </div>
       </div>
     </motion.div>

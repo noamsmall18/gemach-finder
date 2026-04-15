@@ -37,15 +37,15 @@ export const CATEGORY_COLORS: Record<string, { text: string; bg: string }> = {
 }
 
 export const CATEGORY_ACCENT_COLORS: Record<string, string> = {
-  'Baby & Kids': '#D4A017',
-  'Medical Equipment': '#4A7C6F',
-  'Simcha & Events': '#9B6B9E',
-  'Clothing': '#C2724F',
-  'Household': '#8B7355',
-  'Financial/Loans': '#2D3A6E',
-  'Food': '#B8860B',
-  'Seforim & Judaica': '#6B8FA8',
-  'Other': '#64748B',
+  'Baby & Kids': '#D4930F',
+  'Medical Equipment': '#0D8A6A',
+  'Simcha & Events': '#8B5AB8',
+  'Clothing': '#C4572A',
+  'Household': '#7A6840',
+  'Financial/Loans': '#1E2A5E',
+  'Food': '#B57B08',
+  'Seforim & Judaica': '#3B7BA8',
+  'Other': '#546078',
 }
 
 export function getCategoryEmoji(category: string): string {

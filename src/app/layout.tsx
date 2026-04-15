@@ -35,25 +35,27 @@ export default function RootLayout({
     <html lang="en" id="top" className={`${lora.variable} ${nunito.variable}`}>
       <body className="min-h-screen flex flex-col">
         {/* Nav */}
-        <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100/50 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            <a href="#top" className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-navy to-navy-deep flex items-center justify-center shadow-sm">
-                <svg width="16" height="16" viewBox="0 0 100 100" fill="none">
-                  <path d="M50 20C35 20 25 32 25 44C25 65 50 82 50 82C50 82 75 65 75 44C75 32 65 20 50 20Z" fill="#D4A017" opacity="0.9"/>
-                  <path d="M50 32C43 32 36 38 36 46C36 58 50 70 50 70C50 70 64 58 64 46C64 38 57 32 50 32Z" fill="white"/>
+        <nav className="sticky top-0 z-40 bg-white/70 backdrop-blur-2xl border-b border-white/50 shadow-[0_1px_0_rgba(0,0,0,0.03),0_4px_20px_rgba(0,0,0,0.02)]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+            <a href="#top" className="flex items-center gap-3 group">
+              <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-navy via-navy to-navy-deep flex items-center justify-center shadow-[0_2px_8px_rgba(30,42,94,0.3)] group-hover:shadow-[0_4px_16px_rgba(30,42,94,0.4)] transition-shadow duration-300">
+                <svg width="18" height="18" viewBox="0 0 100 100" fill="none">
+                  <path d="M50 20C35 20 25 32 25 44C25 65 50 82 50 82C50 82 75 65 75 44C75 32 65 20 50 20Z" fill="#D4A017" opacity="0.95"/>
+                  <path d="M50 32C43 32 36 38 36 46C36 58 50 70 50 70C50 70 64 58 64 46C64 38 57 32 50 32Z" fill="white" opacity="0.9"/>
                 </svg>
+                <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-transparent to-white/10" />
               </div>
-              <div className="flex items-baseline gap-1.5">
-                <span className="font-heading text-xl font-bold text-navy">GemachFinder</span>
-                <span className="text-[11px] text-slate-400 hidden sm:inline font-medium tracking-wide">Bergen County</span>
+              <div className="flex items-baseline gap-2">
+                <span className="font-heading text-[22px] font-bold text-navy tracking-tight">GemachFinder</span>
+                <span className="text-[10px] text-navy/30 hidden sm:inline font-bold tracking-[0.15em] uppercase">Bergen County</span>
               </div>
             </a>
             <a
               href="#suggest"
-              className="text-sm font-semibold text-gold hover:text-gold-bright transition-colors px-4 py-1.5 rounded-full border border-gold/20 hover:border-gold/40 hover:bg-gold/5"
+              className="text-sm font-bold text-navy bg-gold/10 hover:bg-gold/20 px-5 py-2 rounded-full border border-gold/25 hover:border-gold/40 transition-all duration-300 hover:shadow-[0_2px_12px_rgba(201,151,26,0.15)]"
             >
-              + Suggest a Gemach
+              <span className="hidden sm:inline">+ Suggest a Gemach</span>
+              <span className="sm:hidden">+ Suggest</span>
             </a>
           </div>
         </nav>
