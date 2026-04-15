@@ -1,0 +1,16 @@
+{
+  "name": "GemachFinder - Bergen County",
+  "short_name": "GemachFinder",
+  "description": "Find free community lending services across Bergen County",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF7F2",
+  "theme_color": "#1E2A5E",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

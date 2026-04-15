@@ -5,9 +5,10 @@ import { CATEGORIES, CATEGORY_ACCENT_COLORS } from '@/lib/constants'
 interface CategoryFilterProps {
   selected: string | null
   onSelect: (category: string | null) => void
+  counts?: Record<string, number>
 }
 
-export default function CategoryFilter({ selected, onSelect }: CategoryFilterProps) {
+export default function CategoryFilter({ selected, onSelect, counts }: CategoryFilterProps) {
   return (
     <div>
       <div className="text-[10px] font-bold text-slate-300 uppercase tracking-[0.15em] mb-3 text-center">Browse by category</div>
@@ -21,10 +22,16 @@ export default function CategoryFilter({ selected, onSelect }: CategoryFilterPro
           }`}
         >
           All
+          {counts && (
+            <span className={`text-[10px] tabular-nums ${selected === null ? 'text-white/60' : 'text-slate-400'}`}>
+              {Object.values(counts).reduce((a, b) => a + b, 0)}
+            </span>
+          )}
         </button>
         {CATEGORIES.map((cat) => {
           const isActive = selected === cat.name
           const accentColor = CATEGORY_ACCENT_COLORS[cat.name] || '#64748B'
+          const count = counts?.[cat.name]
           return (
             <button
               key={cat.name}
@@ -42,6 +49,11 @@ export default function CategoryFilter({ selected, onSelect }: CategoryFilterPro
             >
               <span>{cat.emoji}</span>
               <span>{cat.name}</span>
+              {count !== undefined && count > 0 && (
+                <span className={`text-[10px] tabular-nums ${isActive ? 'text-white/60' : 'text-slate-400'}`}>
+                  {count}
+                </span>
+              )}
             </button>
           )
         })}

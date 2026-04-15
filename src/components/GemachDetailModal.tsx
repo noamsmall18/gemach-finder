@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Phone, Mail, Globe, MapPin, Clock, User, FileText, ExternalLink, AlertCircle, ArrowUpRight } from 'lucide-react'
+import { X, Phone, Mail, Globe, MapPin, Clock, User, FileText, AlertCircle, ArrowUpRight, Share2, Check } from 'lucide-react'
 import type { Gemach } from '@/lib/types'
 import { getCategoryEmoji, getCategoryColors, CATEGORY_ACCENT_COLORS } from '@/lib/constants'
 
@@ -12,6 +12,20 @@ interface GemachDetailModalProps {
 }
 
 export default function GemachDetailModal({ gemach, onClose }: GemachDetailModalProps) {
+  const [copied, setCopied] = useState(false)
+
+  const handleShare = useCallback(async () => {
+    if (!gemach) return
+    const text = `${gemach.name} - ${gemach.description}${gemach.contact_phone ? `\nPhone: ${gemach.contact_phone}` : ''}${gemach.contact_email ? `\nEmail: ${gemach.contact_email}` : ''}${gemach.contact_website ? `\nWeb: ${gemach.contact_website}` : ''}`
+    if (navigator.share) {
+      try { await navigator.share({ title: gemach.name, text }) } catch {}
+    } else {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }, [gemach])
+
   useEffect(() => {
     if (gemach) {
       document.body.style.overflow = 'hidden'
@@ -52,7 +66,12 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: '100%' }}
             transition={{ type: 'spring', damping: 32, stiffness: 320 }}
-            className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-xl md:w-[calc(100%-2rem)] md:max-h-[85vh] overflow-y-auto overscroll-contain modal-scroll"
+            drag="y"
+            dragConstraints={{ top: 0 }}
+            dragElastic={{ top: 0, bottom: 0.4 }}
+            onDragEnd={(_, info) => { if (info.offset.y > 100) onClose() }}
+            className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-xl md:w-[calc(100%-2rem)] md:max-h-[85vh] overflow-y-auto overscroll-contain modal-scroll md:!transform-none"
+            style={{ touchAction: 'pan-y' }}
           >
             <div className="bg-white rounded-t-[28px] md:rounded-[24px] shadow-[0_-8px_40px_rgba(0,0,0,0.15)] md:shadow-[0_24px_80px_rgba(0,0,0,0.2)] overflow-hidden">
               {/* Colored header */}
@@ -68,13 +87,22 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
                   <div className="w-10 h-1 rounded-full bg-slate-300/60" />
                 </div>
 
-                {/* Close button */}
-                <button
-                  onClick={onClose}
-                  className="absolute top-4 right-4 md:top-5 md:right-5 w-9 h-9 flex items-center justify-center rounded-full bg-white/80 hover:bg-white shadow-sm hover:shadow transition-all z-10"
-                >
-                  <X className="w-4 h-4 text-slate-500" />
-                </button>
+                {/* Action buttons */}
+                <div className="absolute top-4 right-4 md:top-5 md:right-5 flex items-center gap-2 z-10">
+                  <button
+                    onClick={handleShare}
+                    className="w-9 h-9 flex items-center justify-center rounded-full bg-white/80 hover:bg-white shadow-sm hover:shadow transition-all"
+                    title="Share"
+                  >
+                    {copied ? <Check className="w-4 h-4 text-sage" /> : <Share2 className="w-4 h-4 text-slate-500" />}
+                  </button>
+                  <button
+                    onClick={onClose}
+                    className="w-9 h-9 flex items-center justify-center rounded-full bg-white/80 hover:bg-white shadow-sm hover:shadow transition-all"
+                  >
+                    <X className="w-4 h-4 text-slate-500" />
+                  </button>
+                </div>
 
                 {/* Category + Location */}
                 <div className="flex items-start justify-between gap-3 pr-10">
@@ -171,7 +199,7 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
 
                 {/* Details Section */}
                 {(gemach.contact_name || gemach.address || gemach.hours || gemach.notes) && (
-                  <div className="mt-6 pt-5 border-t border-slate-100/80 space-y-4">
+                  <div className="mt-7 pt-6 border-t border-gradient-to-r from-transparent via-slate-100 to-transparent space-y-4">
                     {gemach.contact_name && (
                       <div className="flex items-start gap-3">
                         <div className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center shrink-0 mt-0.5">

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Lora, Nunito } from 'next/font/google'
+import ScrollNav from '@/components/ScrollNav'
+import BackToTop from '@/components/BackToTop'
 import './globals.css'
 
 const lora = Lora({
@@ -18,11 +20,23 @@ export const metadata: Metadata = {
   title: 'GemachFinder - Bergen County Gemach Directory',
   description:
     'Find free community lending services in Teaneck, Bergenfield, Englewood, Fair Lawn and beyond. Baby equipment, medical supplies, clothing, interest-free loans, and more.',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'GemachFinder',
+  },
   openGraph: {
     title: 'GemachFinder - Bergen County Gemach Directory',
     description:
       'Find free community lending services across Bergen County. Baby gear, medical equipment, simcha supplies, interest-free loans, and more.',
     type: 'website',
+    siteName: 'GemachFinder',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'GemachFinder - Bergen County Gemach Directory',
+    description: 'Find free community lending services across Bergen County.',
   },
 }
 
@@ -34,6 +48,7 @@ export default function RootLayout({
   return (
     <html lang="en" id="top" className={`${lora.variable} ${nunito.variable}`}>
       <body className="min-h-screen flex flex-col">
+        <ScrollNav />
         {/* Nav */}
         <nav className="sticky top-0 z-40 bg-white/70 backdrop-blur-2xl border-b border-white/50 shadow-[0_1px_0_rgba(0,0,0,0.03),0_4px_20px_rgba(0,0,0,0.02)]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
@@ -62,6 +77,7 @@ export default function RootLayout({
 
         {/* Main content */}
         <main className="flex-1">{children}</main>
+        <BackToTop />
       </body>
     </html>
   )

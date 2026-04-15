@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import SearchBar from './SearchBar'
 import CategoryFilter from './CategoryFilter'
 import LocationFilter from './LocationFilter'
 import GemachCard from './GemachCard'
 import GemachDetailModal from './GemachDetailModal'
 import EmptyState from './EmptyState'
+import StatsBar from './StatsBar'
 import type { Gemach } from '@/lib/types'
 
 interface GemachDirectoryProps {
@@ -19,6 +20,13 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
   const [location, setLocation] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<'name' | 'category' | 'location'>('name')
   const [selectedGemach, setSelectedGemach] = useState<Gemach | null>(null)
+
+  const categoryCounts = useMemo(() => {
+    return gemachs.reduce((acc, g) => {
+      acc[g.category] = (acc[g.category] || 0) + 1
+      return acc
+    }, {} as Record<string, number>)
+  }, [gemachs])
 
   const filtered = useMemo(() => {
     let results = gemachs
@@ -65,7 +73,12 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
 
       {/* Categories */}
       <div className="mb-5">
-        <CategoryFilter selected={category} onSelect={setCategory} />
+        <CategoryFilter selected={category} onSelect={setCategory} counts={categoryCounts} />
+      </div>
+
+      {/* Stats bar */}
+      <div className="mb-5">
+        <StatsBar gemachs={gemachs} />
       </div>
 
       {/* Controls row */}
@@ -84,6 +97,14 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
         </div>
         <span className="text-sm text-slate-400 font-medium tabular-nums">
           {filtered.length} gemach{filtered.length !== 1 ? 's' : ''}
+          {(category || location || search) && (
+            <button
+              onClick={() => { setCategory(null); setLocation(null); setSearch('') }}
+              className="ml-2 text-xs text-navy/50 hover:text-navy font-semibold transition-colors"
+            >
+              Clear filters
+            </button>
+          )}
         </span>
       </div>
 

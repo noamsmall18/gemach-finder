@@ -49,12 +49,18 @@ export default function SuggestForm() {
   }
 
   return (
-    <section id="suggest" className="py-16 md:py-20 px-4 relative">
+    <section id="suggest" className="py-16 md:py-24 px-4 relative">
       {/* Background accents */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/[0.015] to-transparent pointer-events-none" />
 
       <div className="relative max-w-2xl mx-auto">
-        <div className="bg-white/70 backdrop-blur-2xl rounded-[28px] p-7 md:p-10 border border-white/50 shadow-[0_4px_24px_rgba(0,0,0,0.03),0_12px_48px_rgba(0,0,0,0.02)]">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+          className="bg-white/70 backdrop-blur-2xl rounded-[28px] p-7 md:p-10 border border-white/50 shadow-[0_4px_24px_rgba(0,0,0,0.03),0_12px_48px_rgba(0,0,0,0.02)]"
+        >
           <AnimatePresence mode="wait">
             {submitted ? (
               <motion.div
@@ -196,7 +202,7 @@ export default function SuggestForm() {
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

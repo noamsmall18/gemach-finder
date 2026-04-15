@@ -60,6 +60,14 @@ html {
   color: #1a2740;
 }
 
+/* Responsive type scale */
+@media (min-width: 768px) {
+  body { font-size: 16px; }
+}
+@media (min-width: 1280px) {
+  body { font-size: 17px; }
+}
+
 /* Subtle noise texture overlay */
 .noise-bg::before {
   content: '';
