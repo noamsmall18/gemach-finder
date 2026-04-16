@@ -181,7 +181,7 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
 
                 {/* Details */}
                 {(gemach.contact_name || gemach.address || gemach.hours || gemach.notes) && (
-                  <div className="mt-6 pt-5 border-t border-slate-100 space-y-4">
+                  <div className="mt-6 pt-5 space-y-4">
                     {gemach.contact_name && (
                       <div className="flex items-start gap-3">
                         <User className="w-4 h-4 text-slate-300 shrink-0 mt-0.5" />

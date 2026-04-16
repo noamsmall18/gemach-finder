@@ -63,35 +63,23 @@ export default function GemachCard({ gemach, index, onSelect }: GemachCardProps)
         </p>
 
         {/* Footer bar */}
-        <div className="flex items-center gap-1.5 mt-4 pt-3.5 border-t border-slate-100/60">
+        <div className="flex items-center gap-2 mt-4 pt-3.5 border-t border-slate-100/60">
           {hasContact ? (
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2">
               {gemach.contact_phone && (
-                <motion.span
-                  whileHover={{ scale: 1.15, rotate: -8 }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-                  className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 transition-colors duration-300"
-                >
+                <span className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center group-hover:bg-emerald-100 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300 delay-0">
                   <Phone className="w-3.5 h-3.5 text-emerald-500" />
-                </motion.span>
+                </span>
               )}
               {gemach.contact_email && (
-                <motion.span
-                  whileHover={{ scale: 1.15, rotate: 8 }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-                  className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-300"
-                >
+                <span className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 delay-75">
                   <Mail className="w-3.5 h-3.5 text-blue-500" />
-                </motion.span>
+                </span>
               )}
               {gemach.contact_website && (
-                <motion.span
-                  whileHover={{ scale: 1.15, rotate: -8 }}
-                  transition={{ type: 'spring', stiffness: 500, damping: 15 }}
-                  className="w-7 h-7 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-slate-100 transition-colors duration-300"
-                >
-                  <Globe className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-500 transition-colors duration-300" />
-                </motion.span>
+                <span className="w-7 h-7 rounded-lg bg-slate-50 flex items-center justify-center group-hover:bg-slate-100 group-hover:scale-110 group-hover:-rotate-6 transition-all duration-300 delay-150">
+                  <Globe className="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-600 transition-colors duration-300" />
+                </span>
               )}
             </div>
           ) : (
