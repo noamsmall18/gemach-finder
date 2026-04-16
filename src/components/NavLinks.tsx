@@ -22,11 +22,11 @@ export default function NavLinks() {
         href="/suggest"
         className={`text-sm font-semibold px-4 py-1.5 rounded-lg transition-all ${
           pathname === '/suggest'
-            ? 'text-white bg-navy shadow-sm'
-            : 'text-navy bg-navy/5 hover:bg-navy/10'
+            ? 'text-white bg-red-500 shadow-sm'
+            : 'text-red-500 bg-red-500/8 hover:bg-red-500/15'
         }`}
       >
-        Missing One
+        Missing One?
       </Link>
     </div>
   )

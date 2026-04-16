@@ -35,7 +35,7 @@ export default function Footer({ gemachCount }: FooterProps) {
               <div className="flex flex-col gap-2">
                 <Link href="/" className="text-sm hover:text-white transition-colors">Directory</Link>
                 <Link href="/requests" className="text-sm hover:text-white transition-colors">Create</Link>
-                <Link href="/suggest" className="text-sm hover:text-white transition-colors">Missing One</Link>
+                <Link href="/suggest" className="text-sm hover:text-white transition-colors">Missing One?</Link>
               </div>
             </div>
             <div>
