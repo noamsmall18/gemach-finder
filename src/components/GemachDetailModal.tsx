@@ -67,7 +67,7 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
           >
             <div className="bg-white rounded-t-2xl md:rounded-2xl shadow-xl">
               {/* Top bar: close + share */}
-              <div className="sticky top-0 z-10 bg-white rounded-t-2xl md:rounded-t-2xl border-b border-slate-100">
+              <div className="sticky top-0 z-10 bg-white rounded-t-2xl md:rounded-t-2xl">
                 {/* Drag handle (mobile) */}
                 <div className="flex justify-center pt-3 md:hidden">
                   <div className="w-8 h-1 rounded-full bg-slate-200" />
