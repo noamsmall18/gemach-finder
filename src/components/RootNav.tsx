@@ -24,8 +24,8 @@ export default function RootNav() {
           <span className="font-heading text-xl font-bold text-navy">GemachFinder</span>
         </Link>
         <div className="flex items-center gap-3">
-          <NavLinks />
           <ThemeToggle />
+          <NavLinks />
         </div>
       </div>
     </nav>

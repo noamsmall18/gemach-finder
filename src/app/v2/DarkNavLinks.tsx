@@ -9,6 +9,7 @@ export default function DarkNavLinks() {
 
   return (
     <div className="flex items-center gap-2 sm:gap-3">
+      <ThemeToggle />
       <Link
         href="/requests"
         className={`text-sm font-semibold px-4 py-1.5 rounded-lg transition-all ${
@@ -29,7 +30,6 @@ export default function DarkNavLinks() {
       >
         Missing One?
       </Link>
-      <ThemeToggle />
     </div>
   )
 }
