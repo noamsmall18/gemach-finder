@@ -70,17 +70,9 @@ const SYNONYMS: Record<string, string[]> = {
   'toy': ['kids', 'baby', 'children'],
   'shabbat': ['shabbos', 'meals', 'food'],
   'shabbos': ['shabbat', 'meals', 'food'],
-  'chesed': ['community', 'volunteer', 'help', 'community services'],
-  'safety': ['shomrim', 'hatzalah', 'security', 'community services'],
-  'emergency': ['hatzalah', 'safety', 'medical', 'community services'],
-  'mikvah': ['mikveh', 'religious life', 'ritual'],
-  'eruv': ['religious life', 'boundary'],
-  'therapy': ['support', 'wellness', 'mental health', 'counseling'],
-  'counseling': ['support', 'wellness', 'therapy', 'mental health'],
-  'addiction': ['support', 'wellness', 'recovery'],
-  'special needs': ['inclusion', 'yachad', 'friendship circle', 'sinai'],
-  'bereavement': ['nechama', 'comfort', 'support', 'loss'],
-  'volunteer': ['chesed', 'community services', 'help'],
+  'chesed': ['community', 'volunteer', 'help'],
+  'safety': ['security', 'medical'],
+  'emergency': ['safety', 'medical'],
 }
 
 export function searchGemachs(gemachs: Gemach[], query: string): Gemach[] {

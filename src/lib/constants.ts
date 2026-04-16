@@ -7,9 +7,6 @@ export const CATEGORIES = [
   { name: 'Financial/Loans', emoji: '💰' },
   { name: 'Food', emoji: '🍞' },
   { name: 'Seforim & Judaica', emoji: '📚' },
-  { name: 'Community Services', emoji: '🤝' },
-  { name: 'Support & Wellness', emoji: '💙' },
-  { name: 'Religious Life', emoji: '🕎' },
 ] as const
 
 export const LOCATIONS = [
@@ -36,9 +33,6 @@ export const CATEGORY_COLORS: Record<string, { text: string; bg: string }> = {
   'Financial/Loans': { text: 'text-navy', bg: 'bg-indigo-50' },
   'Food': { text: 'text-yellow-700', bg: 'bg-yellow-50' },
   'Seforim & Judaica': { text: 'text-blue-700', bg: 'bg-blue-50' },
-  'Community Services': { text: 'text-teal-700', bg: 'bg-teal-50' },
-  'Support & Wellness': { text: 'text-rose-700', bg: 'bg-rose-50' },
-  'Religious Life': { text: 'text-indigo-700', bg: 'bg-indigo-50' },
 }
 
 export const CATEGORY_ACCENT_COLORS: Record<string, string> = {
@@ -50,9 +44,6 @@ export const CATEGORY_ACCENT_COLORS: Record<string, string> = {
   'Financial/Loans': '#1E2A5E',
   'Food': '#B57B08',
   'Seforim & Judaica': '#3B7BA8',
-  'Community Services': '#0F766E',
-  'Support & Wellness': '#BE185D',
-  'Religious Life': '#4338CA',
 }
 
 export function getCategoryEmoji(category: string): string {
