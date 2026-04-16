@@ -110,7 +110,7 @@ export default function WishlistSection() {
               Community Requests
             </h2>
             <p className="text-slate-500 text-sm mt-1">
-              Vote for the gemachs Bergen County needs most.
+              Vote for the gemachs your community needs most.
             </p>
 
             {/* Stats row */}

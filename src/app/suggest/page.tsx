@@ -5,7 +5,7 @@ import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
   title: 'Suggest a Gemach - GemachFinder',
-  description: 'Know a gemach we\'re missing? Help us grow the Bergen County directory by submitting a suggestion.',
+  description: 'Know a gemach we\'re missing? Help us grow the directory by submitting a suggestion.',
 }
 
 async function getGemachCount(): Promise<number> {

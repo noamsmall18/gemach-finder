@@ -19,9 +19,9 @@ const nunito = Nunito({
 })
 
 export const metadata: Metadata = {
-  title: 'GemachFinder - Bergen County Gemach Directory',
+  title: 'GemachFinder - Gemach Directory for Bergen, Passaic & Rockland Counties',
   description:
-    'Find free community lending services in Teaneck, Bergenfield, Englewood, Fair Lawn and beyond. Baby equipment, medical supplies, clothing, interest-free loans, and more.',
+    'Find free community lending services in Teaneck, Bergenfield, Fair Lawn, Passaic, Monsey and beyond. Baby equipment, medical supplies, clothing, interest-free loans, and more.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -29,16 +29,16 @@ export const metadata: Metadata = {
     title: 'GemachFinder',
   },
   openGraph: {
-    title: 'GemachFinder - Bergen County Gemach Directory',
+    title: 'GemachFinder - Gemach Directory for Bergen, Passaic & Rockland Counties',
     description:
-      'Find free community lending services across Bergen County. Baby gear, medical equipment, simcha supplies, interest-free loans, and more.',
+      'Find free community lending services across Bergen County, Passaic County, and Rockland County. Baby gear, medical equipment, simcha supplies, interest-free loans, and more.',
     type: 'website',
     siteName: 'GemachFinder',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GemachFinder - Bergen County Gemach Directory',
-    description: 'Find free community lending services across Bergen County.',
+    title: 'GemachFinder - Gemach Directory for Bergen, Passaic & Rockland Counties',
+    description: 'Find free community lending services across Bergen County, Passaic County, and Rockland County.',
   },
 }
 

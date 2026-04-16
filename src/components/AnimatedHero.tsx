@@ -43,8 +43,8 @@ export default function AnimatedHero({ count }: AnimatedHeroProps) {
         transition={{ duration: 0.4, delay: 0.35 }}
         className="mt-5 text-base sm:text-lg text-slate-500 max-w-xl mx-auto leading-relaxed"
       >
-        The community directory of free lending services across Bergen County.
-        Baby gear, medical equipment, simcha supplies, and more.
+        The community directory of free lending services across Bergen County,
+        Passaic County, and Rockland County. Baby gear, medical equipment, simcha supplies, and more.
       </motion.p>
 
       {/* Scroll indicator */}

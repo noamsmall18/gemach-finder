@@ -5,7 +5,6 @@ export const CATEGORIES = [
   { name: 'Clothing', emoji: '👗' },
   { name: 'Household', emoji: '🏠' },
   { name: 'Financial/Loans', emoji: '💰' },
-  { name: 'Food', emoji: '🍞' },
   { name: 'Seforim & Judaica', emoji: '📚' },
 ] as const
 
@@ -21,7 +20,8 @@ export const LOCATIONS = [
   'New Milford',
   'Bergen County-wide',
   'Teaneck & Bergenfield',
-  'Other',
+  'Spring Valley, NY',
+  'Monsey, NY',
 ] as const
 
 export const CATEGORY_COLORS: Record<string, { text: string; bg: string }> = {
@@ -31,7 +31,6 @@ export const CATEGORY_COLORS: Record<string, { text: string; bg: string }> = {
   'Clothing': { text: 'text-orange-700', bg: 'bg-orange-50' },
   'Household': { text: 'text-yellow-800', bg: 'bg-yellow-50' },
   'Financial/Loans': { text: 'text-navy', bg: 'bg-indigo-50' },
-  'Food': { text: 'text-yellow-700', bg: 'bg-yellow-50' },
   'Seforim & Judaica': { text: 'text-blue-700', bg: 'bg-blue-50' },
 }
 
@@ -42,7 +41,6 @@ export const CATEGORY_ACCENT_COLORS: Record<string, string> = {
   'Clothing': '#C4572A',
   'Household': '#7A6840',
   'Financial/Loans': '#1E2A5E',
-  'Food': '#B57B08',
   'Seforim & Judaica': '#3B7BA8',
 }
 

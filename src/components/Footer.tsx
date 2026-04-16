@@ -24,7 +24,7 @@ export default function Footer({ gemachCount }: FooterProps) {
               <span className="font-heading text-base font-bold text-white">GemachFinder</span>
             </Link>
             <p className="text-sm text-white/40 mt-3 leading-relaxed">
-              A community resource for Bergen County. {gemachCount} verified gemachs and growing.
+              A community resource for Bergen, Passaic & Rockland Counties. {gemachCount} verified gemachs and growing.
             </p>
           </div>
 
@@ -42,7 +42,7 @@ export default function Footer({ gemachCount }: FooterProps) {
               <h4 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3">Info</h4>
               <div className="flex flex-col gap-2">
                 <span className="text-sm">{gemachCount} gemachs</span>
-                <span className="text-sm">8 categories</span>
+                <span className="text-sm">7 categories</span>
                 <span className="text-sm">100% free</span>
               </div>
             </div>

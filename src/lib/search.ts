@@ -55,7 +55,7 @@ const SYNONYMS: Record<string, string[]> = {
   'wedding': ['bridal', 'simcha', 'kallah', 'gown'],
   'money': ['loan', 'financial', 'free loan', 'interest'],
   'loan': ['financial', 'free loan', 'hebrew free loan'],
-  'food': ['pantry', 'meals', 'kosher', 'shabbos'],
+  'food': ['kosher', 'shabbos'],
   'clothes': ['clothing', 'dress', 'gown'],
   'table': ['simcha', 'event', 'tables', 'chairs'],
   'chair': ['simcha', 'event', 'tables', 'chairs'],
@@ -73,6 +73,16 @@ const SYNONYMS: Record<string, string[]> = {
   'chesed': ['community', 'volunteer', 'help'],
   'safety': ['security', 'medical'],
   'emergency': ['safety', 'medical'],
+  'fertility': ['bonei olam', 'ivf', 'infertility', 'financial'],
+  'bike': ['bicycle', 'cycling'],
+  'bicycle': ['bike', 'cycling'],
+  'wig': ['sheitel', 'hair', 'covering'],
+  'sheitel': ['wig', 'hair', 'covering'],
+  'proposal': ['engagement', 'ring', 'simcha'],
+  'preemie': ['premature', 'baby', 'infant', 'nicu'],
+  'bris': ['circumcision', 'baby', 'milah'],
+  'earmuffs': ['ear', 'hearing', 'protection', 'simcha'],
+  'housewares': ['kallah', 'kitchen', 'bride', 'household'],
 }
 
 export function searchGemachs(gemachs: Gemach[], query: string): Gemach[] {
