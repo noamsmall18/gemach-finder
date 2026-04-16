@@ -59,7 +59,7 @@ export default function SuggestForm() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
-          className="bg-white/70 backdrop-blur-2xl rounded-[28px] p-7 md:p-10 border border-white/50 shadow-[0_4px_24px_rgba(0,0,0,0.03),0_12px_48px_rgba(0,0,0,0.02)]"
+          className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200/60 shadow-sm"
         >
           <AnimatePresence mode="wait">
             {submitted ? (

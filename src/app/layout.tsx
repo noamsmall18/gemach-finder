@@ -49,39 +49,44 @@ export default function RootLayout({
     <html lang="en" id="top" className={`${lora.variable} ${nunito.variable}`}>
       <body className="min-h-screen flex flex-col">
         <ScrollNav />
-        {/* Nav */}
-        <nav className="sticky top-0 z-40 bg-white/70 backdrop-blur-2xl border-b border-white/50 shadow-[0_1px_0_rgba(0,0,0,0.03),0_4px_20px_rgba(0,0,0,0.02)]">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-            <a href="#top" className="flex items-center gap-3 group">
-              <div className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-navy via-navy to-navy-deep flex items-center justify-center shadow-[0_2px_8px_rgba(30,42,94,0.3)] group-hover:shadow-[0_4px_16px_rgba(30,42,94,0.4)] transition-shadow duration-300">
-                <svg width="18" height="18" viewBox="0 0 100 100" fill="none">
-                  <path d="M50 20C35 20 25 32 25 44C25 65 50 82 50 82C50 82 75 65 75 44C75 32 65 20 50 20Z" fill="#D4A017" opacity="0.95"/>
-                  <path d="M50 32C43 32 36 38 36 46C36 58 50 70 50 70C50 70 64 58 64 46C64 38 57 32 50 32Z" fill="white" opacity="0.9"/>
+        <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+            {/* Logo */}
+            <a href="#top" className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-navy flex items-center justify-center">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 11.5 7.68 12.07a.5.5 0 0 0 .64 0C13 21.5 20 15.25 20 10c0-4.42-3.58-8-8-8z" fill="#C9971A"/>
+                  <circle cx="12" cy="10" r="3.5" fill="white"/>
                 </svg>
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-transparent to-white/10" />
               </div>
-              <div className="flex items-baseline gap-2">
-                <span className="font-heading text-[22px] font-bold text-navy tracking-tight">GemachFinder</span>
-                <span className="text-[10px] text-navy/30 hidden sm:inline font-bold tracking-[0.15em] uppercase">Bergen County</span>
-              </div>
+              <span className="font-heading text-xl font-bold text-navy">GemachFinder</span>
             </a>
-            <a
-              href="#wishlist"
-              className="text-sm font-semibold text-slate-500 hover:text-navy transition-colors hidden sm:inline"
-            >
-              Wishlist
-            </a>
-            <a
-              href="#suggest"
-              className="text-sm font-bold text-navy bg-gold/10 hover:bg-gold/20 px-5 py-2 rounded-full border border-gold/25 hover:border-gold/40 transition-all duration-300 hover:shadow-[0_2px_12px_rgba(201,151,26,0.15)]"
-            >
-              <span className="hidden sm:inline">+ Suggest a Gemach</span>
-              <span className="sm:hidden">+ Suggest</span>
-            </a>
+
+            {/* Nav links */}
+            <div className="flex items-center gap-6">
+              <a
+                href="#directory"
+                className="text-sm font-medium text-slate-500 hover:text-navy transition-colors hidden sm:block"
+              >
+                Directory
+              </a>
+              <a
+                href="#wishlist"
+                className="text-sm font-medium text-slate-500 hover:text-navy transition-colors hidden sm:block"
+              >
+                Wishlist
+              </a>
+              <a
+                href="#suggest"
+                className="text-sm font-semibold text-navy bg-navy/5 hover:bg-navy/10 px-4 py-1.5 rounded-lg transition-colors"
+              >
+                <span className="hidden sm:inline">+ Suggest</span>
+                <span className="sm:hidden">+</span>
+              </a>
+            </div>
           </div>
         </nav>
 
-        {/* Main content */}
         <main className="flex-1">{children}</main>
         <BackToTop />
       </body>

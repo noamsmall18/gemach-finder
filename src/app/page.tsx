@@ -32,8 +32,8 @@ export default async function Home() {
 
   return (
     <>
-      {/* Hero - full viewport landing */}
-      <section className="relative min-h-[85vh] md:min-h-[80vh] flex items-center justify-center px-4 text-center overflow-hidden">
+      {/* Hero */}
+      <section className="relative min-h-[60vh] md:min-h-[55vh] flex items-center justify-center px-4 text-center overflow-hidden">
         <HeroBackground />
         <AnimatedHero count={gemachs.length} />
       </section>

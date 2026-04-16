@@ -18,10 +18,10 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
   return (
     <div className="max-w-2xl mx-auto">
       <div
-        className={`relative rounded-2xl transition-all duration-400 ${
+        className={`relative rounded-2xl transition-all duration-300 ${
           focused
-            ? 'bg-white shadow-[0_4px_32px_rgba(30,42,94,0.12),0_0_0_2px_rgba(30,42,94,0.08)]'
-            : 'bg-white/90 shadow-[0_2px_16px_rgba(0,0,0,0.04),0_0_0_1px_rgba(0,0,0,0.03)]'
+            ? 'bg-white shadow-md ring-2 ring-navy/10'
+            : 'bg-white shadow-sm border border-slate-200/60'
         }`}
       >
         <motion.div

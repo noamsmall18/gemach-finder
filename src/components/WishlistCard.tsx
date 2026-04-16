@@ -34,7 +34,7 @@ export default function WishlistCard({ item, index, hasVoted, onVote }: Wishlist
       initial={{ opacity: 0, y: 16, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ delay: index * 0.04, duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
-      className="relative bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-100 hover:border-slate-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(30,42,94,0.08)] transition-all duration-500 overflow-hidden"
+      className="relative bg-white rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-md hover:border-slate-200 transition-all duration-300 overflow-hidden"
     >
       <div
         className="h-[3px] w-full"

@@ -77,7 +77,7 @@ export default function WishlistSection() {
           </div>
 
           {/* Request Form */}
-          <div className="bg-white/70 backdrop-blur-2xl rounded-[24px] p-6 md:p-8 border border-white/50 shadow-[0_4px_24px_rgba(0,0,0,0.03),0_12px_48px_rgba(0,0,0,0.02)] mb-8">
+          <div className="bg-white rounded-2xl p-6 md:p-8 border border-slate-200/60 shadow-sm mb-8">
             <WishlistRequestForm onItemAdded={handleItemAdded} />
           </div>
 

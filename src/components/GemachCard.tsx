@@ -28,7 +28,7 @@ export default function GemachCard({ gemach, index, onSelect }: GemachCardProps)
       tabIndex={0}
       role="button"
       aria-label={`View details for ${gemach.name}`}
-      className="relative bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-100 hover:border-slate-200/80 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_12px_40px_rgba(30,42,94,0.08),0_4px_12px_rgba(0,0,0,0.03)] transition-all duration-500 cursor-pointer group overflow-hidden focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-offset-2"
+      className="relative bg-white rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-md hover:border-slate-200 transition-all duration-300 cursor-pointer group overflow-hidden focus-visible:ring-2 focus-visible:ring-navy focus-visible:ring-offset-2"
     >
       {/* Category accent bar with gradient */}
       <div className="h-[3px] w-full" style={{ background: `linear-gradient(90deg, ${accentColor}, ${accentColor}55, transparent)` }} />

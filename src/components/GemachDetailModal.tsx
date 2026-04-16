@@ -56,7 +56,7 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-50 bg-navy-deep/50 backdrop-blur-md"
+            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
             onClick={onClose}
           />
 
@@ -68,7 +68,7 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
             transition={{ type: 'spring', damping: 32, stiffness: 320 }}
             className="fixed inset-x-0 bottom-0 z-50 max-h-[92vh] md:inset-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:max-w-xl md:w-[calc(100%-2rem)] md:max-h-[85vh] overflow-y-auto overscroll-contain modal-scroll"
           >
-            <div className="bg-white rounded-t-[28px] md:rounded-[24px] shadow-[0_-8px_40px_rgba(0,0,0,0.15)] md:shadow-[0_24px_80px_rgba(0,0,0,0.2)] overflow-hidden">
+            <div className="bg-white rounded-t-2xl md:rounded-2xl shadow-xl overflow-hidden">
               {/* Colored header */}
               <div
                 className="relative px-6 pt-5 pb-4 md:pt-7 md:pb-5"
