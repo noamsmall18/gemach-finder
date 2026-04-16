@@ -46,13 +46,12 @@ export default function WishlistCard({ item, rank, index, hasVoted, onVote }: Wi
 
       {/* Upvote button */}
       <motion.button
-        whileTap={!hasVoted ? { scale: 0.92 } : undefined}
-        onClick={() => !hasVoted && onVote(item.id)}
-        disabled={hasVoted}
-        className={`flex flex-col items-center justify-center w-11 h-14 rounded-lg border shrink-0 transition-all duration-200 ${
+        whileTap={{ scale: 0.92 }}
+        onClick={() => onVote(item.id)}
+        className={`flex flex-col items-center justify-center w-11 h-14 rounded-lg border shrink-0 transition-all duration-200 cursor-pointer ${
           hasVoted
-            ? 'bg-navy/5 border-navy/20 cursor-default'
-            : 'bg-white border-slate-200 hover:border-navy/30 hover:bg-navy/[0.03] cursor-pointer'
+            ? 'bg-navy/5 border-navy/20 hover:bg-navy/[0.03] hover:border-navy/10'
+            : 'bg-white border-slate-200 hover:border-navy/30 hover:bg-navy/[0.03]'
         }`}
       >
         <motion.div

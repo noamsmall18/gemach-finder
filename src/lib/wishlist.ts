@@ -56,6 +56,20 @@ export async function voteForItem(itemId: string, fingerprint: string): Promise<
   return data === true
 }
 
+export async function unvoteForItem(itemId: string, fingerprint: string): Promise<boolean> {
+  const { data, error } = await supabase.rpc('unvote_wishlist_item', {
+    item_id: itemId,
+    fingerprint,
+  })
+
+  if (error) {
+    console.error('Error unvoting:', error)
+    return false
+  }
+
+  return data === true
+}
+
 const FINGERPRINT_KEY = 'gemach-voter-id'
 const VOTED_KEY = 'gemach-wishlist-votes'
 
@@ -83,5 +97,12 @@ export function addVotedId(id: string): void {
   if (typeof window === 'undefined') return
   const ids = getVotedIds()
   ids.add(id)
+  localStorage.setItem(VOTED_KEY, JSON.stringify([...ids]))
+}
+
+export function removeVotedId(id: string): void {
+  if (typeof window === 'undefined') return
+  const ids = getVotedIds()
+  ids.delete(id)
   localStorage.setItem(VOTED_KEY, JSON.stringify([...ids]))
 }

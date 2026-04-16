@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { ArrowUpDown } from 'lucide-react'
 import WishlistCard from './WishlistCard'
 import WishlistRequestForm from './WishlistRequestForm'
-import { fetchWishlistItems, voteForItem, getOrCreateFingerprint, getVotedIds, addVotedId } from '@/lib/wishlist'
+import { fetchWishlistItems, voteForItem, unvoteForItem, getOrCreateFingerprint, getVotedIds, addVotedId, removeVotedId } from '@/lib/wishlist'
 import type { WishlistItem } from '@/lib/types'
 
 type SortMode = 'votes' | 'newest'
@@ -26,25 +26,53 @@ export default function WishlistSection() {
     })
   }, [])
 
-  const handleVote = useCallback(async (id: string) => {
-    setItems(prev => prev.map(item =>
-      item.id === id ? { ...item, vote_count: item.vote_count + 1 } : item
-    ))
-    setVotedIds(prev => new Set([...prev, id]))
-    addVotedId(id)
+  const handleToggleVote = useCallback(async (id: string) => {
+    const alreadyVoted = votedIds.has(id)
 
-    const success = await voteForItem(id, fingerprint)
-    if (!success) {
+    if (alreadyVoted) {
+      // Optimistic unvote
       setItems(prev => prev.map(item =>
-        item.id === id ? { ...item, vote_count: item.vote_count - 1 } : item
+        item.id === id ? { ...item, vote_count: Math.max(item.vote_count - 1, 0) } : item
       ))
       setVotedIds(prev => {
         const next = new Set(prev)
         next.delete(id)
         return next
       })
+      removeVotedId(id)
+
+      const success = await unvoteForItem(id, fingerprint)
+      if (!success) {
+        // Roll back
+        setItems(prev => prev.map(item =>
+          item.id === id ? { ...item, vote_count: item.vote_count + 1 } : item
+        ))
+        setVotedIds(prev => new Set([...prev, id]))
+        addVotedId(id)
+      }
+    } else {
+      // Optimistic vote
+      setItems(prev => prev.map(item =>
+        item.id === id ? { ...item, vote_count: item.vote_count + 1 } : item
+      ))
+      setVotedIds(prev => new Set([...prev, id]))
+      addVotedId(id)
+
+      const success = await voteForItem(id, fingerprint)
+      if (!success) {
+        // Roll back
+        setItems(prev => prev.map(item =>
+          item.id === id ? { ...item, vote_count: item.vote_count - 1 } : item
+        ))
+        setVotedIds(prev => {
+          const next = new Set(prev)
+          next.delete(id)
+          return next
+        })
+        removeVotedId(id)
+      }
     }
-  }, [fingerprint])
+  }, [fingerprint, votedIds])
 
   const handleItemAdded = useCallback((item: WishlistItem) => {
     setItems(prev => [item, ...prev])
@@ -126,7 +154,7 @@ export default function WishlistSection() {
                     rank={rankMap.get(item.id) || i + 1}
                     index={i}
                     hasVoted={votedIds.has(item.id)}
-                    onVote={handleVote}
+                    onVote={handleToggleVote}
                   />
                 ))}
               </div>
