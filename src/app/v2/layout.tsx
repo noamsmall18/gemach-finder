@@ -12,8 +12,8 @@ export default function V2Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="dark-mode">
       <DarkScrollNav />
-      <nav className="sticky top-0 z-40 bg-[#0B0F1A]/80 backdrop-blur-xl border-b border-white/[0.06]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      <nav className="sticky top-0 z-40 bg-[#0B0F1A] backdrop-blur-xl border-b border-white/[0.06]">
+        <div className="w-full px-4 sm:px-6 h-14 flex items-center justify-between">
           <Link href="/v2" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
