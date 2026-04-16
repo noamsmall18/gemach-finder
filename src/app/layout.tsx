@@ -66,6 +66,12 @@ export default function RootLayout({
               </div>
             </a>
             <a
+              href="#wishlist"
+              className="text-sm font-semibold text-slate-500 hover:text-navy transition-colors hidden sm:inline"
+            >
+              Wishlist
+            </a>
+            <a
               href="#suggest"
               className="text-sm font-bold text-navy bg-gold/10 hover:bg-gold/20 px-5 py-2 rounded-full border border-gold/25 hover:border-gold/40 transition-all duration-300 hover:shadow-[0_2px_12px_rgba(201,151,26,0.15)]"
             >

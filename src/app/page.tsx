@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import GemachDirectory from '@/components/GemachDirectory'
 import SuggestForm from '@/components/SuggestForm'
+import WishlistSection from '@/components/WishlistSection'
 import Footer from '@/components/Footer'
 import AnimatedHero from '@/components/AnimatedHero'
 import HeroBackground from '@/components/HeroBackground'
@@ -43,6 +44,9 @@ export default async function Home() {
           <GemachDirectory gemachs={gemachs} />
         </div>
       </section>
+
+      {/* Community Wishlist */}
+      <WishlistSection />
 
       {/* Suggest Form */}
       <SuggestForm />

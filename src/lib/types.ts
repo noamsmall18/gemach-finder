@@ -22,3 +22,14 @@ export interface Suggestion {
   contact_info: string
   submitted_by: string | null
 }
+
+export interface WishlistItem {
+  id: string
+  name: string
+  category: string
+  description: string | null
+  requested_by: string | null
+  vote_count: number
+  status: 'open' | 'fulfilled'
+  created_at: string
+}
