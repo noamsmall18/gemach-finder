@@ -34,8 +34,8 @@ export default function Footer({ gemachCount }: FooterProps) {
               <h4 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3">Navigate</h4>
               <div className="flex flex-col gap-2">
                 <Link href="/" className="text-sm hover:text-white transition-colors">Directory</Link>
-                <Link href="/requests" className="text-sm hover:text-white transition-colors">Requests</Link>
-                <Link href="/suggest" className="text-sm hover:text-white transition-colors">Suggest a Gemach</Link>
+                <Link href="/requests" className="text-sm hover:text-white transition-colors">Vote</Link>
+                <Link href="/suggest" className="text-sm hover:text-white transition-colors">Report Missing</Link>
               </div>
             </div>
             <div>

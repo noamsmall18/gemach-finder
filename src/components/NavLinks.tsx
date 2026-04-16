@@ -6,35 +6,38 @@ import { usePathname } from 'next/navigation'
 export default function NavLinks() {
   const pathname = usePathname()
 
-  const links = [
-    { href: '/', label: 'Directory' },
-    { href: '/requests', label: 'Requests' },
-  ]
-
   return (
-    <div className="flex items-center gap-6">
-      {links.map(({ href, label }) => (
-        <Link
-          key={href}
-          href={href}
-          className={`text-sm font-medium transition-colors hidden sm:block ${
-            pathname === href
-              ? 'text-navy'
-              : 'text-slate-500 hover:text-navy'
-          }`}
-        >
-          {label}
-        </Link>
-      ))}
+    <div className="flex items-center gap-2 sm:gap-3">
+      <Link
+        href="/"
+        className={`text-sm font-medium transition-colors hidden sm:block px-3 py-1.5 rounded-lg ${
+          pathname === '/'
+            ? 'text-navy bg-navy/5'
+            : 'text-slate-500 hover:text-navy hover:bg-slate-50'
+        }`}
+      >
+        Directory
+      </Link>
+      <Link
+        href="/requests"
+        className={`text-sm font-semibold px-4 py-1.5 rounded-lg transition-all ${
+          pathname === '/requests'
+            ? 'text-white bg-gold shadow-sm'
+            : 'text-gold bg-gold/8 hover:bg-gold/15'
+        }`}
+      >
+        <span className="hidden sm:inline">Vote</span>
+        <span className="sm:hidden">Vote</span>
+      </Link>
       <Link
         href="/suggest"
-        className={`text-sm font-semibold px-4 py-1.5 rounded-lg transition-colors ${
+        className={`text-sm font-semibold px-4 py-1.5 rounded-lg transition-all ${
           pathname === '/suggest'
-            ? 'text-white bg-navy'
+            ? 'text-white bg-navy shadow-sm'
             : 'text-navy bg-navy/5 hover:bg-navy/10'
         }`}
       >
-        <span className="hidden sm:inline">+ Suggest</span>
+        <span className="hidden sm:inline">+ Missing</span>
         <span className="sm:hidden">+</span>
       </Link>
     </div>
