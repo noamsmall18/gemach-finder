@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Lora, Nunito } from 'next/font/google'
+import Link from 'next/link'
 import ScrollNav from '@/components/ScrollNav'
+import NavLinks from '@/components/NavLinks'
 import BackToTop from '@/components/BackToTop'
 import './globals.css'
 
@@ -52,7 +54,7 @@ export default function RootLayout({
         <nav className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
             {/* Logo */}
-            <a href="#top" className="flex items-center gap-2.5">
+            <Link href="/" className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-navy flex items-center justify-center">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 11.5 7.68 12.07a.5.5 0 0 0 .64 0C13 21.5 20 15.25 20 10c0-4.42-3.58-8-8-8z" fill="#C9971A"/>
@@ -60,30 +62,9 @@ export default function RootLayout({
                 </svg>
               </div>
               <span className="font-heading text-xl font-bold text-navy">GemachFinder</span>
-            </a>
+            </Link>
 
-            {/* Nav links */}
-            <div className="flex items-center gap-6">
-              <a
-                href="#directory"
-                className="text-sm font-medium text-slate-500 hover:text-navy transition-colors hidden sm:block"
-              >
-                Directory
-              </a>
-              <a
-                href="#requests"
-                className="text-sm font-medium text-slate-500 hover:text-navy transition-colors hidden sm:block"
-              >
-                Requests
-              </a>
-              <a
-                href="#suggest"
-                className="text-sm font-semibold text-navy bg-navy/5 hover:bg-navy/10 px-4 py-1.5 rounded-lg transition-colors"
-              >
-                <span className="hidden sm:inline">+ Suggest</span>
-                <span className="sm:hidden">+</span>
-              </a>
-            </div>
+            <NavLinks />
           </div>
         </nav>
 

@@ -1,7 +1,5 @@
 import { createClient } from '@supabase/supabase-js'
 import GemachDirectory from '@/components/GemachDirectory'
-import SuggestForm from '@/components/SuggestForm'
-import WishlistSection from '@/components/WishlistSection'
 import Footer from '@/components/Footer'
 import AnimatedHero from '@/components/AnimatedHero'
 import HeroBackground from '@/components/HeroBackground'
@@ -32,26 +30,17 @@ export default async function Home() {
 
   return (
     <>
-      {/* Hero */}
       <section className="relative min-h-[60vh] md:min-h-[55vh] flex items-center justify-center px-4 text-center overflow-hidden">
         <HeroBackground />
         <AnimatedHero count={gemachs.length} />
       </section>
 
-      {/* Directory */}
       <section id="directory" className="px-4 sm:px-6 pb-12">
         <div className="max-w-7xl mx-auto">
           <GemachDirectory gemachs={gemachs} />
         </div>
       </section>
 
-      {/* Community Wishlist */}
-      <WishlistSection />
-
-      {/* Suggest Form */}
-      <SuggestForm />
-
-      {/* Footer */}
       <Footer gemachCount={gemachs.length} />
     </>
   )

@@ -1,3 +1,6 @@
+'use client'
+
+import Link from 'next/link'
 import { ArrowUp } from 'lucide-react'
 
 interface FooterProps {
@@ -11,7 +14,7 @@ export default function Footer({ gemachCount }: FooterProps) {
         <div className="flex flex-col md:flex-row items-start justify-between gap-8">
           {/* Brand */}
           <div className="max-w-xs">
-            <div className="flex items-center gap-2.5">
+            <Link href="/" className="flex items-center gap-2.5">
               <div className="w-7 h-7 rounded-md bg-white/10 flex items-center justify-center">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                   <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 11.5 7.68 12.07a.5.5 0 0 0 .64 0C13 21.5 20 15.25 20 10c0-4.42-3.58-8-8-8z" fill="#C9971A"/>
@@ -19,7 +22,7 @@ export default function Footer({ gemachCount }: FooterProps) {
                 </svg>
               </div>
               <span className="font-heading text-base font-bold text-white">GemachFinder</span>
-            </div>
+            </Link>
             <p className="text-sm text-white/40 mt-3 leading-relaxed">
               A community resource for Bergen County. {gemachCount} verified gemachs and growing.
             </p>
@@ -30,29 +33,29 @@ export default function Footer({ gemachCount }: FooterProps) {
             <div>
               <h4 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3">Navigate</h4>
               <div className="flex flex-col gap-2">
-                <a href="#directory" className="text-sm hover:text-white transition-colors">Directory</a>
-                <a href="#requests" className="text-sm hover:text-white transition-colors">Requests</a>
-                <a href="#suggest" className="text-sm hover:text-white transition-colors">Suggest a Gemach</a>
+                <Link href="/" className="text-sm hover:text-white transition-colors">Directory</Link>
+                <Link href="/requests" className="text-sm hover:text-white transition-colors">Requests</Link>
+                <Link href="/suggest" className="text-sm hover:text-white transition-colors">Suggest a Gemach</Link>
               </div>
             </div>
             <div>
               <h4 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3">Info</h4>
               <div className="flex flex-col gap-2">
                 <span className="text-sm">{gemachCount} gemachs</span>
-                <span className="text-sm">9 categories</span>
+                <span className="text-sm">8 categories</span>
                 <span className="text-sm">100% free</span>
               </div>
             </div>
           </div>
 
           {/* Back to top */}
-          <a
-            href="#top"
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className="text-sm text-white/40 hover:text-white/70 transition-colors flex items-center gap-1.5"
           >
             <ArrowUp className="w-3.5 h-3.5" />
             Top
-          </a>
+          </button>
         </div>
 
         <div className="mt-10 pt-6 border-t border-white/8">
