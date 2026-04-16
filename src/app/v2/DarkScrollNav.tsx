@@ -1,11 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { usePathname } from 'next/navigation'
 
-export default function ScrollNav() {
+export default function DarkScrollNav() {
   const [scrolled, setScrolled] = useState(false)
-  const pathname = usePathname()
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10)
@@ -14,15 +12,14 @@ export default function ScrollNav() {
   }, [])
 
   useEffect(() => {
-    if (pathname.startsWith('/v2')) return
-    const nav = document.querySelector('nav')
+    const nav = document.querySelector('.dark-mode nav')
     if (!nav) return
     if (scrolled) {
-      nav.style.boxShadow = '0 1px 3px rgba(0,0,0,0.06)'
+      ;(nav as HTMLElement).style.boxShadow = '0 1px 3px rgba(0,0,0,0.4)'
     } else {
-      nav.style.boxShadow = ''
+      ;(nav as HTMLElement).style.boxShadow = ''
     }
-  }, [scrolled, pathname])
+  }, [scrolled])
 
   return null
 }

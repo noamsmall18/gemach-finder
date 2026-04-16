@@ -73,7 +73,7 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
       </div>
 
       <div className="mb-5">
-        <StatsBar gemachs={gemachs} />
+        <StatsBar gemachs={gemachs} selectedCategory={category} />
       </div>
 
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">

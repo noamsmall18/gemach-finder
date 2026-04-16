@@ -1,3 +1,5 @@
+export const revalidate = 300 // refresh data every 5 minutes
+
 import { createClient } from '@supabase/supabase-js'
 import GemachDirectory from '@/components/GemachDirectory'
 import Footer from '@/components/Footer'
