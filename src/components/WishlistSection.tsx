@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { motion } from 'framer-motion'
-import { Lightbulb } from 'lucide-react'
 import WishlistCard from './WishlistCard'
 import WishlistRequestForm from './WishlistRequestForm'
 import { fetchWishlistItems, voteForItem, getOrCreateFingerprint, getVotedIds, addVotedId } from '@/lib/wishlist'
@@ -51,7 +50,7 @@ export default function WishlistSection() {
   }, [])
 
   return (
-    <section id="wishlist" className="py-16 md:py-24 px-4 relative">
+    <section id="requests" className="py-16 md:py-24 px-4 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-navy/[0.015] to-transparent pointer-events-none" />
 
       <div className="relative max-w-5xl mx-auto">
@@ -63,16 +62,11 @@ export default function WishlistSection() {
         >
           {/* Header */}
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2.5 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center">
-                <Lightbulb className="w-5 h-5 text-gold" />
-              </div>
-              <h2 className="font-heading text-2xl md:text-3xl font-bold text-slate-800">
-                Community Wishlist
-              </h2>
-            </div>
-            <p className="text-slate-500 text-sm md:text-base max-w-lg mx-auto">
-              What gemach does the community need? Request one below and vote for the ideas you support.
+            <h2 className="font-heading text-2xl md:text-3xl font-bold text-slate-800">
+              Community Requests
+            </h2>
+            <p className="text-slate-500 text-sm md:text-base max-w-lg mx-auto mt-2">
+              What gemach should exist in Bergen County? Submit a request and vote for the ones you need most.
             </p>
           </div>
 
@@ -94,7 +88,7 @@ export default function WishlistSection() {
           ) : items.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-slate-400 text-sm">
-                No wishes yet - be the first to request a gemach the community needs!
+                No requests yet. Be the first to suggest a gemach the community needs.
               </p>
             </div>
           ) : (

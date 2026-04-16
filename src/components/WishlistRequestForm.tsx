@@ -72,7 +72,7 @@ export default function WishlistRequestForm({ onItemAdded }: WishlistRequestForm
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">
-            What gemach do you wish existed? <span className="text-red-400">*</span>
+            What gemach is needed? <span className="text-red-400">*</span>
           </label>
           <input
             type="text"
@@ -142,7 +142,7 @@ export default function WishlistRequestForm({ onItemAdded }: WishlistRequestForm
             className="flex items-center justify-center gap-2 px-6 py-3.5 bg-sage/10 text-sage rounded-xl font-bold text-sm"
           >
             <Check className="w-4 h-4" />
-            Added to the wishlist!
+            Request submitted!
           </motion.div>
         ) : (
           <motion.button
@@ -154,7 +154,7 @@ export default function WishlistRequestForm({ onItemAdded }: WishlistRequestForm
             {submitting ? 'Submitting...' : (
               <>
                 <Send className="w-4 h-4" />
-                Submit Wish
+                Submit Request
               </>
             )}
           </motion.button>

@@ -22,7 +22,7 @@ export default function GemachCard({ gemach, index, onSelect }: GemachCardProps)
       initial={{ opacity: 0, y: 16, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ delay: index * 0.03, duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
-      whileHover={{ y: -4, transition: { type: 'spring', stiffness: 400, damping: 30 } }}
+      whileHover={{ y: -2, transition: { duration: 0.2, ease: 'easeOut' } }}
       onClick={() => onSelect(gemach)}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(gemach) }}}
       tabIndex={0}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { useState, useMemo } from 'react'
 import SearchBar from './SearchBar'
 import CategoryFilter from './CategoryFilter'
 import LocationFilter from './LocationFilter'
@@ -8,6 +8,7 @@ import GemachCard from './GemachCard'
 import GemachDetailModal from './GemachDetailModal'
 import EmptyState from './EmptyState'
 import StatsBar from './StatsBar'
+import { searchGemachs, getSuggestions } from '@/lib/search'
 import type { Gemach } from '@/lib/types'
 
 interface GemachDirectoryProps {
@@ -28,19 +29,13 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
     }, {} as Record<string, number>)
   }, [gemachs])
 
-  const filtered = useMemo(() => {
-    let results = gemachs
+  const suggestions = useMemo(() => {
+    return getSuggestions(gemachs, search)
+  }, [gemachs, search])
 
-    if (search) {
-      const q = search.toLowerCase()
-      results = results.filter(
-        (g) =>
-          g.name.toLowerCase().includes(q) ||
-          g.description.toLowerCase().includes(q) ||
-          (g.notes && g.notes.toLowerCase().includes(q)) ||
-          (g.contact_name && g.contact_name.toLowerCase().includes(q))
-      )
-    }
+  const filtered = useMemo(() => {
+    // Use fuzzy search instead of exact matching
+    let results = search ? searchGemachs(gemachs, search) : gemachs
 
     if (category) {
       results = results.filter((g) => g.category === category)
@@ -55,33 +50,32 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
       })
     }
 
-    results = [...results].sort((a, b) => {
-      if (sortBy === 'name') return a.name.localeCompare(b.name)
-      if (sortBy === 'category') return a.category.localeCompare(b.category) || a.name.localeCompare(b.name)
-      return a.location.localeCompare(b.location) || a.name.localeCompare(b.name)
-    })
+    // Only sort alphabetically when not searching (search results are already ranked by relevance)
+    if (!search) {
+      results = [...results].sort((a, b) => {
+        if (sortBy === 'name') return a.name.localeCompare(b.name)
+        if (sortBy === 'category') return a.category.localeCompare(b.category) || a.name.localeCompare(b.name)
+        return a.location.localeCompare(b.location) || a.name.localeCompare(b.name)
+      })
+    }
 
     return results
   }, [gemachs, search, category, location, sortBy])
 
   return (
     <div>
-      {/* Search */}
       <div className="mb-7">
-        <SearchBar value={search} onChange={setSearch} />
+        <SearchBar value={search} onChange={setSearch} suggestions={suggestions} />
       </div>
 
-      {/* Categories */}
       <div className="mb-5">
         <CategoryFilter selected={category} onSelect={setCategory} counts={categoryCounts} />
       </div>
 
-      {/* Stats bar */}
       <div className="mb-5">
         <StatsBar gemachs={gemachs} />
       </div>
 
-      {/* Controls row */}
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div className="flex items-center gap-2.5">
           <LocationFilter selected={location} onSelect={setLocation} />
@@ -108,7 +102,6 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
         </span>
       </div>
 
-      {/* Results */}
       {filtered.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
           {filtered.map((gemach, i) => (
@@ -124,7 +117,6 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
         <EmptyState query={search} />
       )}
 
-      {/* Detail Modal */}
       <GemachDetailModal
         gemach={selectedGemach}
         onClose={() => setSelectedGemach(null)}

@@ -71,10 +71,10 @@ export default function RootLayout({
                 Directory
               </a>
               <a
-                href="#wishlist"
+                href="#requests"
                 className="text-sm font-medium text-slate-500 hover:text-navy transition-colors hidden sm:block"
               >
-                Wishlist
+                Requests
               </a>
               <a
                 href="#suggest"
