@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowUpDown } from 'lucide-react'
+import { ArrowUpDown, TrendingUp } from 'lucide-react'
 import WishlistCard from './WishlistCard'
 import WishlistRequestForm from './WishlistRequestForm'
 import { fetchWishlistItems, voteForItem, unvoteForItem, getOrCreateFingerprint, getVotedIds, addVotedId, removeVotedId } from '@/lib/wishlist'
@@ -30,7 +30,6 @@ export default function WishlistSection() {
     const alreadyVoted = votedIds.has(id)
 
     if (alreadyVoted) {
-      // Optimistic unvote
       setItems(prev => prev.map(item =>
         item.id === id ? { ...item, vote_count: Math.max(item.vote_count - 1, 0) } : item
       ))
@@ -43,7 +42,6 @@ export default function WishlistSection() {
 
       const success = await unvoteForItem(id, fingerprint)
       if (!success) {
-        // Roll back
         setItems(prev => prev.map(item =>
           item.id === id ? { ...item, vote_count: item.vote_count + 1 } : item
         ))
@@ -51,7 +49,6 @@ export default function WishlistSection() {
         addVotedId(id)
       }
     } else {
-      // Optimistic vote
       setItems(prev => prev.map(item =>
         item.id === id ? { ...item, vote_count: item.vote_count + 1 } : item
       ))
@@ -60,7 +57,6 @@ export default function WishlistSection() {
 
       const success = await voteForItem(id, fingerprint)
       if (!success) {
-        // Roll back
         setItems(prev => prev.map(item =>
           item.id === id ? { ...item, vote_count: item.vote_count - 1 } : item
         ))
@@ -79,15 +75,25 @@ export default function WishlistSection() {
     setVotedIds(prev => new Set([...prev, item.id]))
   }, [])
 
-  const sorted = [...items].sort((a, b) => {
-    if (sortMode === 'votes') return b.vote_count - a.vote_count
-    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  })
+  const sorted = useMemo(() => {
+    return [...items].sort((a, b) => {
+      if (sortMode === 'votes') return b.vote_count - a.vote_count || new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    })
+  }, [items, sortMode])
 
-  // Compute rank based on vote count (for display purposes, always by votes)
-  const voteRanked = [...items].sort((a, b) => b.vote_count - a.vote_count)
-  const rankMap = new Map<string, number>()
-  voteRanked.forEach((item, i) => rankMap.set(item.id, i + 1))
+  // Ranks always by votes
+  const voteRanked = useMemo(() => {
+    return [...items].sort((a, b) => b.vote_count - a.vote_count || new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+  }, [items])
+  const rankMap = useMemo(() => {
+    const map = new Map<string, number>()
+    voteRanked.forEach((item, i) => map.set(item.id, i + 1))
+    return map
+  }, [voteRanked])
+
+  const maxVotes = useMemo(() => Math.max(...items.map(i => i.vote_count), 1), [items])
+  const totalVotes = useMemo(() => items.reduce((sum, i) => sum + i.vote_count, 0), [items])
 
   return (
     <section id="requests" className="py-16 md:py-24 px-4">
@@ -99,19 +105,26 @@ export default function WishlistSection() {
           transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
         >
           {/* Header */}
-          <div className="flex items-end justify-between mb-6">
-            <div>
-              <h2 className="font-heading text-2xl md:text-3xl font-bold text-slate-800">
-                Community Requests
-              </h2>
-              <p className="text-slate-500 text-sm mt-1">
-                Vote for the gemachs Bergen County needs most.
-              </p>
-            </div>
+          <div className="mb-6">
+            <h2 className="font-heading text-2xl md:text-3xl font-bold text-slate-800">
+              Community Requests
+            </h2>
+            <p className="text-slate-500 text-sm mt-1">
+              Vote for the gemachs Bergen County needs most.
+            </p>
+
+            {/* Stats row */}
             {items.length > 0 && (
-              <span className="text-xs font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-lg tabular-nums shrink-0">
-                {items.length} request{items.length !== 1 ? 's' : ''}
-              </span>
+              <div className="flex items-center gap-4 mt-3">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-400">
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span className="tabular-nums">{totalVotes} vote{totalVotes !== 1 ? 's' : ''}</span>
+                </div>
+                <span className="text-xs text-slate-300">&middot;</span>
+                <span className="text-xs font-semibold text-slate-400 tabular-nums">
+                  {items.length} request{items.length !== 1 ? 's' : ''}
+                </span>
+              </div>
             )}
           </div>
 
@@ -120,7 +133,7 @@ export default function WishlistSection() {
             <WishlistRequestForm onItemAdded={handleItemAdded} />
           </div>
 
-          {/* Sort + list */}
+          {/* Leaderboard */}
           {loading ? (
             <div className="space-y-3">
               {[0, 1, 2].map((i) => (
@@ -135,8 +148,12 @@ export default function WishlistSection() {
             </div>
           ) : (
             <>
+              {/* Sort controls */}
               {items.length > 1 && (
-                <div className="flex items-center justify-end mb-3">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    Leaderboard
+                  </span>
                   <button
                     onClick={() => setSortMode(sortMode === 'votes' ? 'newest' : 'votes')}
                     className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-400 hover:text-slate-600 transition-colors"
@@ -146,6 +163,8 @@ export default function WishlistSection() {
                   </button>
                 </div>
               )}
+
+              {/* Cards */}
               <div className="space-y-2">
                 {sorted.map((item, i) => (
                   <WishlistCard
@@ -155,6 +174,7 @@ export default function WishlistSection() {
                     index={i}
                     hasVoted={votedIds.has(item.id)}
                     onVote={handleToggleVote}
+                    maxVotes={maxVotes}
                   />
                 ))}
               </div>
