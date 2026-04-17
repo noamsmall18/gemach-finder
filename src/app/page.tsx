@@ -32,12 +32,12 @@ export default async function Home() {
 
   return (
     <>
-      <section className="relative min-h-[60vh] md:min-h-[55vh] flex items-center justify-center px-4 text-center overflow-hidden">
+      <section className="relative min-h-[45vh] sm:min-h-[60vh] md:min-h-[55vh] flex items-center justify-center px-4 text-center overflow-hidden">
         <HeroBackground />
         <AnimatedHero count={gemachs.length} />
       </section>
 
-      <section id="directory" className="px-4 sm:px-6 pb-12">
+      <section id="directory" className="px-3 sm:px-4 md:px-6 pb-8 sm:pb-12">
         <div className="max-w-7xl mx-auto">
           <GemachDirectory gemachs={gemachs} />
         </div>

@@ -40,7 +40,7 @@ export default function SearchBar({ value, onChange, suggestions = [] }: SearchB
               : 'bg-white shadow-sm border border-slate-200/60'
           }`}
         >
-          <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 transition-colors duration-200 ${focused ? 'text-navy' : 'text-slate-300'}`} />
+          <Search className={`absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 w-4 sm:w-4.5 h-4 sm:h-4.5 transition-colors duration-200 ${focused ? 'text-navy' : 'text-slate-300'}`} />
           <input
             ref={inputRef}
             type="text"
@@ -48,8 +48,8 @@ export default function SearchBar({ value, onChange, suggestions = [] }: SearchB
             onChange={(e) => onChange(e.target.value)}
             onFocus={() => setFocused(true)}
             onBlur={() => setTimeout(() => setFocused(false), 150)}
-            placeholder="Search by name, category, or keyword..."
-            className="w-full pl-11 pr-10 py-3.5 text-sm bg-transparent rounded-xl outline-none placeholder:text-slate-300"
+            placeholder="Search gemachs..."
+            className="w-full pl-10 sm:pl-11 pr-10 py-3 sm:py-3.5 text-sm bg-transparent rounded-xl outline-none placeholder:text-slate-300"
           />
           <AnimatePresence>
             {value && (

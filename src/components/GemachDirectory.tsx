@@ -64,32 +64,32 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
 
   return (
     <div>
-      <div className="mb-7">
+      <div className="mb-5 sm:mb-7">
         <SearchBar value={search} onChange={setSearch} suggestions={suggestions} />
       </div>
 
-      <div className="mb-5">
+      <div className="mb-4 sm:mb-5">
         <CategoryFilter selected={category} onSelect={setCategory} counts={categoryCounts} />
       </div>
 
-      <div className="mb-5">
+      <div className="mb-4 sm:mb-5">
         <StatsBar gemachs={gemachs} selectedCategory={category} />
       </div>
 
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <div className="flex items-center gap-2.5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-2.5 sm:gap-3">
+        <div className="flex items-center gap-2">
           <LocationFilter selected={location} onSelect={setLocation} />
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'name' | 'category' | 'location')}
-            className="appearance-none px-3.5 py-2 rounded-xl text-sm font-semibold bg-white/80 border border-slate-100 text-slate-500 hover:border-slate-200 hover:text-slate-700 transition-all duration-200 cursor-pointer outline-none focus:border-navy"
+            className="appearance-none px-3 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white/80 border border-slate-100 text-slate-500 hover:border-slate-200 hover:text-slate-700 transition-all duration-200 cursor-pointer outline-none focus:border-navy"
           >
             <option value="name">Sort by Name</option>
             <option value="category">Sort by Category</option>
             <option value="location">Sort by Location</option>
           </select>
         </div>
-        <span className="text-sm text-slate-400 font-medium tabular-nums">
+        <span className="text-xs sm:text-sm text-slate-400 font-medium tabular-nums">
           {filtered.length} gemach{filtered.length !== 1 ? 's' : ''}
           {(category || location || search) && (
             <button
@@ -103,7 +103,7 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
       </div>
 
       {filtered.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
           {filtered.map((gemach, i) => (
             <GemachCard
               key={gemach.id}
