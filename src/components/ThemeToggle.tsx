@@ -17,7 +17,6 @@ function SunIcon() {
       strokeLinejoin="round"
       className="text-yellow-300"
     >
-      {/* Core circle */}
       <motion.circle
         cx="12"
         cy="12"
@@ -26,7 +25,6 @@ function SunIcon() {
         animate={{ scale: 1 }}
         transition={{ type: 'spring', stiffness: 300, damping: 15, delay: 0.1 }}
       />
-      {/* Rays - each one grows outward with stagger */}
       {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
         const rad = (angle * Math.PI) / 180
         return (
@@ -80,11 +78,17 @@ export default function ThemeToggle() {
 
   useEffect(() => setMounted(true), [])
 
+  // Always clear clickEffect after animation duration as a safety net
+  useEffect(() => {
+    if (!clickEffect) return
+    const timer = setTimeout(() => setClickEffect(false), 600)
+    return () => clearTimeout(timer)
+  }, [clickEffect])
+
   const toggle = useCallback(() => {
-    // Trigger the click ripple
+    if (clickEffect) return
     setClickEffect(true)
 
-    // Navigate after a brief moment so user sees the effect
     setTimeout(() => {
       if (isDark) {
         localStorage.setItem('gemach-theme', 'light')
@@ -93,16 +97,15 @@ export default function ThemeToggle() {
         localStorage.setItem('gemach-theme', 'dark')
         router.push(pathname === '/' ? '/v2' : `/v2${pathname}`)
       }
-      setClickEffect(false)
-    }, 350)
-  }, [isDark, pathname, router])
+    }, 300)
+  }, [isDark, pathname, router, clickEffect])
 
   if (!mounted) return <div className="w-9 h-9" />
 
   return (
     <button
       onClick={toggle}
-      className={`relative w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+      className={`relative w-9 h-9 rounded-full flex items-center justify-center transition-colors overflow-hidden ${
         isDark
           ? 'hover:bg-white/10 active:bg-white/20'
           : 'hover:bg-slate-100 active:bg-slate-200'
@@ -110,7 +113,7 @@ export default function ThemeToggle() {
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       title={isDark ? 'Light mode' : 'Dark mode'}
     >
-      {/* Click ripple */}
+      {/* Click ripple - ends at opacity 0 */}
       <AnimatePresence>
         {clickEffect && (
           <motion.div
@@ -123,7 +126,7 @@ export default function ThemeToggle() {
         )}
       </AnimatePresence>
 
-      {/* Sparkle particles on click */}
+      {/* Sparkle particles - all end at opacity 0 and scale 0 */}
       <AnimatePresence>
         {clickEffect && (
           <>
@@ -135,12 +138,13 @@ export default function ThemeToggle() {
                   className={`absolute w-1 h-1 rounded-full ${isDark ? 'bg-yellow-300' : 'bg-indigo-400'}`}
                   initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
                   animate={{
-                    x: Math.cos(rad) * 20,
-                    y: Math.sin(rad) * 20,
+                    x: Math.cos(rad) * 16,
+                    y: Math.sin(rad) * 16,
                     scale: 0,
                     opacity: 0,
                   }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.35, ease: 'easeOut' }}
                 />
               )
             })}
@@ -163,44 +167,12 @@ export default function ThemeToggle() {
         ) : (
           <motion.div
             key="moon"
-            className="relative"
             initial={{ rotate: 120, scale: 0, opacity: 0 }}
             animate={{ rotate: 0, scale: 1, opacity: 1 }}
             exit={{ rotate: -120, scale: 0, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 200, damping: 12 }}
           >
             <MoonIcon />
-            {/* Stars */}
-            {[
-              { angle: -40, dist: 14, size: 3, delay: 0.3 },
-              { angle: -80, dist: 16, size: 2, delay: 0.45 },
-              { angle: 20, dist: 15, size: 2.5, delay: 0.55 },
-            ].map((star, i) => {
-              const rad = (star.angle * Math.PI) / 180
-              return (
-                <motion.div
-                  key={i}
-                  className="absolute rounded-full bg-slate-400/70"
-                  style={{
-                    width: star.size,
-                    height: star.size,
-                    top: `calc(50% + ${Math.sin(rad) * star.dist}px)`,
-                    left: `calc(50% + ${Math.cos(rad) * star.dist}px)`,
-                    transform: 'translate(-50%, -50%)',
-                  }}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{
-                    scale: [0, 1.4, 1],
-                    opacity: [0, 0.8, 0.5],
-                  }}
-                  transition={{
-                    delay: star.delay,
-                    duration: 0.35,
-                    ease: 'easeOut',
-                  }}
-                />
-              )
-            })}
           </motion.div>
         )}
       </AnimatePresence>
