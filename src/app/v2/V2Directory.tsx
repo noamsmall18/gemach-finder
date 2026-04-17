@@ -71,7 +71,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState<string | null>(null)
   const [location, setLocation] = useState<string | null>(null)
-  const [sortBy, setSortBy] = useState<'name' | 'category' | 'location'>('name')
+  const [sortBy, setSortBy] = useState<'popular' | 'name' | 'category' | 'location'>('popular')
   const [selectedGemach, setSelectedGemach] = useState<Gemach | null>(null)
   const [copied, setCopied] = useState(false)
   const [searchFocused, setSearchFocused] = useState(false)
@@ -116,6 +116,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
     }
     if (!search) {
       results = [...results].sort((a, b) => {
+        if (sortBy === 'popular') return (b.priority - a.priority) || a.name.localeCompare(b.name)
         if (sortBy === 'name') return a.name.localeCompare(b.name)
         if (sortBy === 'category') return a.category.localeCompare(b.category) || a.name.localeCompare(b.name)
         return a.location.localeCompare(b.location) || a.name.localeCompare(b.name)
@@ -317,8 +318,9 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                 </div>
 
                 {/* Sort */}
-                <select value={sortBy} onChange={e => setSortBy(e.target.value as 'name' | 'category' | 'location')}
+                <select value={sortBy} onChange={e => setSortBy(e.target.value as 'popular' | 'name' | 'category' | 'location')}
                   className="appearance-none px-3.5 py-2 rounded-xl text-sm font-semibold bg-white/[0.05] border border-white/[0.06] text-white/50 hover:border-white/[0.12] hover:text-white/70 transition-all duration-200 cursor-pointer outline-none focus:border-indigo-500/50">
+                  <option value="popular">Popular</option>
                   <option value="name">Sort by Name</option>
                   <option value="category">Sort by Category</option>
                   <option value="location">Sort by Location</option>

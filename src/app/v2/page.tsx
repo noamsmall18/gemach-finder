@@ -7,7 +7,7 @@ async function getGemachs(): Promise<Gemach[]> {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
-  const { data } = await supabase.from('gemachs').select('*').eq('verified', true).order('name')
+  const { data } = await supabase.from('gemachs').select('*').eq('verified', true).order('priority', { ascending: false })
   return data || []
 }
 

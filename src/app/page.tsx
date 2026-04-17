@@ -17,7 +17,7 @@ async function getGemachs(): Promise<Gemach[]> {
     .from('gemachs')
     .select('*')
     .eq('verified', true)
-    .order('name')
+    .order('priority', { ascending: false })
 
   if (error) {
     console.error('Error fetching gemachs:', error)

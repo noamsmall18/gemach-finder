@@ -19,7 +19,7 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState<string | null>(null)
   const [location, setLocation] = useState<string | null>(null)
-  const [sortBy, setSortBy] = useState<'name' | 'category' | 'location'>('name')
+  const [sortBy, setSortBy] = useState<'popular' | 'name' | 'category' | 'location'>('popular')
   const [selectedGemach, setSelectedGemach] = useState<Gemach | null>(null)
 
   const categoryCounts = useMemo(() => {
@@ -50,9 +50,10 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
       })
     }
 
-    // Only sort alphabetically when not searching (search results are already ranked by relevance)
+    // Only sort when not searching (search results are already ranked by relevance)
     if (!search) {
       results = [...results].sort((a, b) => {
+        if (sortBy === 'popular') return (b.priority - a.priority) || a.name.localeCompare(b.name)
         if (sortBy === 'name') return a.name.localeCompare(b.name)
         if (sortBy === 'category') return a.category.localeCompare(b.category) || a.name.localeCompare(b.name)
         return a.location.localeCompare(b.location) || a.name.localeCompare(b.name)
@@ -81,9 +82,10 @@ export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
           <LocationFilter selected={location} onSelect={setLocation} />
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'name' | 'category' | 'location')}
+            onChange={(e) => setSortBy(e.target.value as 'popular' | 'name' | 'category' | 'location')}
             className="appearance-none px-3 sm:px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white/80 border border-slate-100 text-slate-500 hover:border-slate-200 hover:text-slate-700 transition-all duration-200 cursor-pointer outline-none focus:border-navy"
           >
+            <option value="popular">Popular</option>
             <option value="name">Sort by Name</option>
             <option value="category">Sort by Category</option>
             <option value="location">Sort by Location</option>
