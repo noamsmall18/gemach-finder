@@ -19,7 +19,7 @@ export default function AnimatedHero({ count }: AnimatedHeroProps) {
         className="flex justify-center mb-4 sm:mb-6"
       >
         <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white border border-slate-200 text-xs font-semibold text-slate-600">
-          <span className="w-1.5 h-1.5 rounded-full bg-sage" />
+          <span className="w-1.5 h-1.5 rounded-full bg-sea" />
           <AnimatedCounter target={count} /> verified gemachs
         </div>
       </motion.div>

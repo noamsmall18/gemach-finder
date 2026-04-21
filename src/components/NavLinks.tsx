@@ -13,8 +13,8 @@ export default function NavLinks() {
         href="/requests"
         className={`text-sm font-semibold px-2.5 sm:px-4 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
           pathname === '/requests'
-            ? 'text-white bg-gold shadow-sm'
-            : 'text-gold bg-gold/8 hover:bg-gold/15'
+            ? 'text-white bg-sea shadow-sm'
+            : 'text-sea bg-sea/8 hover:bg-sea/15'
         }`}
       >
         <Plus className="w-3.5 h-3.5 sm:hidden" />

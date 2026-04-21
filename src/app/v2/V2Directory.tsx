@@ -13,9 +13,12 @@ import { searchGemachs, getSuggestions } from '@/lib/search'
 
 /* ─── Animated Counter ─── */
 function AnimatedCounter({ target, duration = 1200 }: { target: number; duration?: number }) {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(target)
+  const [hasAnimated, setHasAnimated] = useState(false)
   useEffect(() => {
-    if (target === 0) return
+    if (target === 0 || hasAnimated) return
+    setHasAnimated(true)
+    setCount(0)
     const startTime = performance.now()
     const step = (currentTime: number) => {
       const elapsed = currentTime - startTime
@@ -25,7 +28,7 @@ function AnimatedCounter({ target, duration = 1200 }: { target: number; duration
       if (progress < 1) requestAnimationFrame(step)
     }
     requestAnimationFrame(step)
-  }, [target, duration])
+  }, [target, duration, hasAnimated])
   return <>{count}</>
 }
 
@@ -138,6 +141,25 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
     }
   }, [selectedGemach])
 
+  const handleWhatsApp = useCallback(() => {
+    if (!selectedGemach) return
+    const g = selectedGemach
+    const siteUrl = typeof window !== 'undefined' ? window.location.origin : ''
+    const lines = [
+      `*${g.name}*`,
+      `${getCategoryEmoji(g.category)} ${g.category} · 📍 ${g.location}`,
+      '',
+      g.description,
+    ]
+    if (g.contact_phone) lines.push('', `📞 ${g.contact_phone}`)
+    if (g.contact_email) lines.push(`✉️ ${g.contact_email}`)
+    if (g.contact_website) lines.push(`🌐 ${g.contact_website}`)
+    if (g.address) lines.push(`🏠 ${g.address}`)
+    if (g.hours) lines.push(`🕒 ${g.hours}`)
+    if (siteUrl) lines.push('', `More gemachs: ${siteUrl}`)
+    window.open(`https://wa.me/?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener,noreferrer')
+  }, [selectedGemach])
+
   // Lock body scroll when modal open
   useEffect(() => {
     if (selectedGemach) {
@@ -160,8 +182,8 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
           {/* Background */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute inset-0 bg-gradient-to-b from-[#0B0F1A] via-[#0B0F1A] to-[#0F1420]" />
-            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-indigo-500/[0.04] rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-purple-500/[0.03] rounded-full blur-3xl" />
+            <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-sea/[0.08] rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-navy-light/[0.08] rounded-full blur-3xl" />
             <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
           </div>
 
@@ -184,7 +206,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
               className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1] tracking-tight text-white">
               Find What You Need.
               <br />
-              <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Borrow It Free.</span>
+              <span className="bg-gradient-to-r from-sea to-sea-light bg-clip-text text-transparent">Borrow It Free.</span>
             </motion.h1>
 
             {/* Subtitle */}
@@ -216,10 +238,10 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                 <div className="relative">
                   <div className={`relative rounded-xl transition-all duration-200 ${
                     searchFocused
-                      ? 'bg-white/[0.08] shadow-md ring-2 ring-indigo-500/20'
+                      ? 'bg-white/[0.08] shadow-md ring-2 ring-sea/30'
                       : 'bg-white/[0.05] border border-white/[0.06]'
                   }`}>
-                    <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 transition-colors duration-200 ${searchFocused ? 'text-indigo-400' : 'text-white/20'}`} />
+                    <Search className={`absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 transition-colors duration-200 ${searchFocused ? 'text-sea' : 'text-white/20'}`} />
                     <input ref={searchInputRef} type="text" value={search}
                       onChange={e => setSearch(e.target.value)}
                       onFocus={() => setSearchFocused(true)}
@@ -245,7 +267,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                         {suggestions.map(suggestion => (
                           <button key={suggestion}
                             onMouseDown={e => { e.preventDefault(); setSearch(suggestion); setShowSuggestions(false) }}
-                            className="w-full px-4 py-2.5 text-left text-sm text-white/60 hover:bg-white/[0.05] hover:text-indigo-300 transition-colors flex items-center gap-2">
+                            className="w-full px-4 py-2.5 text-left text-sm text-white/60 hover:bg-white/[0.05] hover:text-sea-light transition-colors flex items-center gap-2">
                             <Search className="w-3 h-3 text-white/20 shrink-0" />
                             {suggestion}
                           </button>
@@ -308,7 +330,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                 <div className="relative inline-flex items-center">
                   <MapPin className="absolute left-3 w-4 h-4 text-white/30 pointer-events-none" />
                   <select value={location || ''} onChange={e => setLocation(e.target.value || null)}
-                    className="appearance-none pl-9 pr-8 py-2 rounded-xl text-sm font-semibold bg-white/[0.05] border border-white/[0.06] text-white/50 hover:border-white/[0.12] hover:text-white/70 transition-all duration-200 cursor-pointer outline-none focus:border-indigo-500/50">
+                    className="appearance-none pl-9 pr-8 py-2 rounded-xl text-sm font-semibold bg-white/[0.05] border border-white/[0.06] text-white/50 hover:border-white/[0.12] hover:text-white/70 transition-all duration-200 cursor-pointer outline-none focus:border-sea/60">
                     <option value="">All Locations</option>
                     {LOCATIONS.map(loc => <option key={loc} value={loc}>{loc}</option>)}
                   </select>
@@ -319,7 +341,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
 
                 {/* Sort */}
                 <select value={sortBy} onChange={e => setSortBy(e.target.value as 'popular' | 'name' | 'category' | 'location')}
-                  className="appearance-none px-3.5 py-2 rounded-xl text-sm font-semibold bg-white/[0.05] border border-white/[0.06] text-white/50 hover:border-white/[0.12] hover:text-white/70 transition-all duration-200 cursor-pointer outline-none focus:border-indigo-500/50">
+                  className="appearance-none px-3.5 py-2 rounded-xl text-sm font-semibold bg-white/[0.05] border border-white/[0.06] text-white/50 hover:border-white/[0.12] hover:text-white/70 transition-all duration-200 cursor-pointer outline-none focus:border-sea/60">
                   <option value="popular">Popular</option>
                   <option value="name">Sort by Name</option>
                   <option value="category">Sort by Category</option>
@@ -331,7 +353,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                 {filtered.length} gemach{filtered.length !== 1 ? 's' : ''}
                 {(category || location || search) && (
                   <button onClick={() => { setCategory(null); setLocation(null); setSearch('') }}
-                    className="ml-2 text-xs text-indigo-400/50 hover:text-indigo-400 font-semibold transition-colors">
+                    className="ml-2 text-xs text-sea/60 hover:text-sea font-semibold transition-colors">
                     Clear filters
                   </button>
                 )}
@@ -354,7 +376,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                       onClick={() => setSelectedGemach(gemach)}
                       onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedGemach(gemach) } }}
                       tabIndex={0} role="button" aria-label={`View details for ${gemach.name}`}
-                      className="relative bg-white/[0.04] rounded-2xl border border-white/[0.06] hover:bg-white/[0.07] hover:border-white/[0.1] transition-all duration-300 cursor-pointer group overflow-hidden focus-visible:ring-2 focus-visible:ring-indigo-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0F1A]">
+                      className="relative bg-white/[0.04] rounded-2xl border border-white/[0.06] hover:bg-white/[0.07] hover:border-white/[0.1] transition-all duration-300 cursor-pointer group overflow-hidden focus-visible:ring-2 focus-visible:ring-sea focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B0F1A]">
                       {/* Accent bar */}
                       <div className="h-[3px] w-full" style={{ background: `linear-gradient(90deg, ${accentColor}, ${accentColor}55, transparent)` }} />
                       <div className="p-5 md:p-6">
@@ -370,7 +392,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                           </span>
                         </div>
                         {/* Title */}
-                        <h3 className="font-heading text-[17px] md:text-lg font-bold text-white/90 group-hover:text-indigo-300 transition-colors duration-300 leading-snug">
+                        <h3 className="font-heading text-[17px] md:text-lg font-bold text-white/90 group-hover:text-sea-light transition-colors duration-300 leading-snug">
                           <span className="inline">{gemach.name}</span>
                           {gemach.verified && (
                             <BadgeCheck
@@ -407,7 +429,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                               <AlertCircle className="w-3 h-3" />Limited Info
                             </span>
                           )}
-                          <div className="ml-auto flex items-center gap-0.5 text-[11px] text-white/15 group-hover:text-indigo-400/50 transition-colors duration-300 font-medium">
+                          <div className="ml-auto flex items-center gap-0.5 text-[11px] text-white/15 group-hover:text-sea/70 transition-colors duration-300 font-medium">
                             <span className="hidden sm:inline">Details</span>
                             <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-300" />
                           </div>
@@ -431,7 +453,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                   Try a different search term, or browse by category. Know of a gemach we&apos;re missing?
                 </p>
                 <a href="/suggest"
-                  className="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl font-bold text-sm hover:shadow-[0_8px_24px_rgba(99,102,241,0.25)] transition-all duration-300 group">
+                  className="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-gradient-to-r from-sea to-navy-light text-white rounded-xl font-bold text-sm hover:shadow-[0_8px_24px_rgba(94,148,184,0.3)] transition-all duration-300 group">
                   Suggest a Gemach
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </a>
@@ -517,6 +539,12 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                         <span className="text-sm">{emoji}</span> {gemach.category}
                       </span>
                       <div className="flex items-center gap-1.5">
+                        <button onClick={handleWhatsApp}
+                          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-emerald-500/10 transition-colors group" title="Share on WhatsApp" aria-label="Share on WhatsApp">
+                          <svg viewBox="0 0 24 24" className="w-4 h-4 text-white/30 group-hover:text-[#25D366] transition-colors" fill="currentColor" aria-hidden="true">
+                            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                          </svg>
+                        </button>
                         <button onClick={handleShare}
                           className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/[0.06] transition-colors" title="Share">
                           {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-white/30" />}
@@ -617,7 +645,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                                 <div className="text-[10px] text-white/25 font-semibold uppercase tracking-wider">Address</div>
                                 <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(gemach.address)}`}
                                   target="_blank" rel="noopener noreferrer"
-                                  className="text-sm text-indigo-400 hover:underline mt-0.5 block">{gemach.address}</a>
+                                  className="text-sm text-sea hover:underline mt-0.5 block">{gemach.address}</a>
                               </div>
                             </div>
                           )}

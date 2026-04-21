@@ -117,7 +117,7 @@ export default function ThemeToggle() {
       <AnimatePresence>
         {clickEffect && (
           <motion.div
-            className={`absolute inset-0 rounded-full ${isDark ? 'bg-yellow-300/20' : 'bg-indigo-400/20'}`}
+            className={`absolute inset-0 rounded-full ${isDark ? 'bg-yellow-300/20' : 'bg-sea/25'}`}
             initial={{ scale: 0, opacity: 1 }}
             animate={{ scale: 2.5, opacity: 0 }}
             exit={{ opacity: 0 }}
@@ -135,7 +135,7 @@ export default function ThemeToggle() {
               return (
                 <motion.div
                   key={angle}
-                  className={`absolute w-1 h-1 rounded-full ${isDark ? 'bg-yellow-300' : 'bg-indigo-400'}`}
+                  className={`absolute w-1 h-1 rounded-full ${isDark ? 'bg-yellow-300' : 'bg-sea'}`}
                   initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
                   animate={{
                     x: Math.cos(rad) * 16,

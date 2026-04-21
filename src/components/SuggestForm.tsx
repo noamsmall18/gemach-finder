@@ -51,7 +51,7 @@ export default function SuggestForm() {
   return (
     <section id="suggest" className="py-16 md:py-24 px-4 relative">
       {/* Background accents */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-gold/[0.015] to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-sea/[0.015] to-transparent pointer-events-none" />
 
       <div className="relative max-w-2xl mx-auto">
         <motion.div
@@ -73,9 +73,9 @@ export default function SuggestForm() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ type: 'spring', delay: 0.2, stiffness: 200 }}
-                  className="w-20 h-20 bg-gradient-to-br from-sage/10 to-sage/5 rounded-2xl flex items-center justify-center mx-auto"
+                  className="w-20 h-20 bg-gradient-to-br from-sea/10 to-sea/5 rounded-2xl flex items-center justify-center mx-auto"
                 >
-                  <Check className="w-10 h-10 text-sage" />
+                  <Check className="w-10 h-10 text-sea" />
                 </motion.div>
                 <h3 className="font-heading text-2xl font-bold mt-6 text-slate-800">Thank you!</h3>
                 <p className="text-slate-500 mt-2.5 max-w-sm mx-auto leading-relaxed">
@@ -94,8 +94,8 @@ export default function SuggestForm() {
             ) : (
               <motion.div key="form" initial={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 <div className="flex items-center gap-2.5 mb-1.5">
-                  <div className="w-8 h-8 rounded-xl bg-gold/10 flex items-center justify-center">
-                    <Sparkles className="w-4 h-4 text-gold" />
+                  <div className="w-8 h-8 rounded-xl bg-sea/10 flex items-center justify-center">
+                    <Sparkles className="w-4 h-4 text-sea" />
                   </div>
                   <h2 className="font-heading text-2xl font-bold text-slate-800">
                     Know a gemach we&apos;re missing?

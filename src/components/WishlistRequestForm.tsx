@@ -71,7 +71,7 @@ export default function WishlistRequestForm({ onItemAdded }: WishlistRequestForm
       <motion.div
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="flex items-center justify-center gap-2 py-3 text-sage font-semibold text-sm"
+        className="flex items-center justify-center gap-2 py-3 text-sea font-semibold text-sm"
       >
         <Check className="w-4 h-4" />
         Request added - your vote counts!

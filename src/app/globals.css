@@ -3,13 +3,12 @@
 @theme inline {
   --color-cream: #FAF7F2;
   --color-cream-dark: #F3EDE4;
-  --color-navy: #1E2A5E;
-  --color-navy-deep: #141D45;
-  --color-navy-light: #3B4D8A;
-  --color-gold: #C9971A;
-  --color-gold-soft: #F5E6C8;
-  --color-sage: #3D7A6B;
-  --color-sage-light: #5FA08F;
+  --color-navy: #1E3A64;
+  --color-navy-deep: #15294A;
+  --color-navy-light: #2E548A;
+  --color-sea: #5E94B8;
+  --color-sea-soft: #E0ECF4;
+  --color-sea-light: #8DB5D1;
   --font-heading: var(--font-lora);
   --font-body: var(--font-nunito);
 }
@@ -39,7 +38,7 @@ html {
 }
 
 ::selection {
-  background-color: rgba(30, 42, 94, 0.12);
+  background-color: rgba(30, 58, 100, 0.15);
 }
 
 *:focus-visible {
@@ -59,9 +58,6 @@ html {
   border-radius: 4px;
 }
 
-/* Contact icon hover animations — only the SVG icon moves, container stays still */
-
-/* Phone: smooth decaying rocking like a handset ringing */
 @keyframes phone-ring {
   0% { transform: rotate(0deg); }
   6% { transform: rotate(16deg); }
@@ -77,7 +73,6 @@ html {
   100% { transform: rotate(0deg); }
 }
 
-/* Mail: envelope tilts back to "open", letter peeks up, settles */
 @keyframes mail-open {
   0% { transform: translateY(0) rotateX(0deg) scale(1); }
   20% { transform: translateY(-2px) rotateX(-14deg) scale(1.08); }
@@ -88,7 +83,6 @@ html {
   100% { transform: translateY(0) rotateX(0deg) scale(1); }
 }
 
-/* Globe: smooth full 3D spin with gentle axis tilt */
 @keyframes globe-orbit {
   0% { transform: rotateY(0deg) rotateX(0deg); }
   25% { transform: rotateY(90deg) rotateX(6deg); }
@@ -97,7 +91,6 @@ html {
   100% { transform: rotateY(360deg) rotateX(0deg); }
 }
 
-/* Container styles — subtle bg change only, no movement */
 .icon-phone,
 .icon-mail,
 .icon-globe {
@@ -110,7 +103,7 @@ html {
 }
 
 .icon-phone:hover {
-  background-color: rgb(209 250 229);
+  background-color: rgb(219 234 244);
 }
 .icon-phone:hover svg {
   animation: phone-ring 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97);
@@ -120,7 +113,7 @@ html {
   perspective: 300px;
 }
 .icon-mail:hover {
-  background-color: rgb(219 234 254);
+  background-color: rgb(219 234 244);
 }
 .icon-mail:hover svg {
   animation: mail-open 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);

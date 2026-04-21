@@ -14,8 +14,8 @@ export default function DarkNavLinks() {
         href="/requests"
         className={`text-sm font-semibold px-4 py-1.5 rounded-lg transition-all ${
           pathname === '/requests'
-            ? 'text-[#0B0F1A] bg-gold shadow-sm'
-            : 'text-gold bg-gold/10 hover:bg-gold/20'
+            ? 'text-[#0B0F1A] bg-sea shadow-sm'
+            : 'text-sea bg-sea/10 hover:bg-sea/20'
         }`}
       >
         Create

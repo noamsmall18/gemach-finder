@@ -32,7 +32,7 @@ export const CATEGORY_COLORS: Record<string, { text: string; bg: string }> = {
   'Clothing': { text: 'text-orange-700', bg: 'bg-orange-50' },
   'Household': { text: 'text-yellow-800', bg: 'bg-yellow-50' },
   'Food': { text: 'text-rose-700', bg: 'bg-rose-50' },
-  'Financial/Loans': { text: 'text-navy', bg: 'bg-indigo-50' },
+  'Financial/Loans': { text: 'text-navy', bg: 'bg-sea-soft' },
   'Seforim & Judaica': { text: 'text-blue-700', bg: 'bg-blue-50' },
 }
 
@@ -43,7 +43,7 @@ export const CATEGORY_ACCENT_COLORS: Record<string, string> = {
   'Clothing': '#C4572A',
   'Household': '#7A6840',
   'Food': '#B8415A',
-  'Financial/Loans': '#1E2A5E',
+  'Financial/Loans': '#1E3A64',
   'Seforim & Judaica': '#3B7BA8',
 }
 

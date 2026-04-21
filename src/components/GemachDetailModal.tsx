@@ -127,7 +127,7 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
                       className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 active:bg-slate-200 transition-colors"
                       title="Share"
                     >
-                      {copied ? <Check className="w-4 h-4 text-sage" /> : <Share2 className="w-4 h-4 text-slate-400" />}
+                      {copied ? <Check className="w-4 h-4 text-sea" /> : <Share2 className="w-4 h-4 text-slate-400" />}
                     </button>
                     <button
                       onClick={onClose}
