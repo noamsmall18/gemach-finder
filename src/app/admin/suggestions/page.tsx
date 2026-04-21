@@ -52,11 +52,19 @@ export default async function AdminSuggestionsPage() {
             {suggestions.length} pending {suggestions.length === 1 ? 'submission' : 'submissions'}
           </p>
         </div>
-        <form action={adminLogout}>
-          <button className="text-xs font-semibold text-slate-500 hover:text-navy px-3 py-1.5 rounded-lg border border-slate-200 hover:border-navy transition-colors">
-            Sign out
-          </button>
-        </form>
+        <div className="flex items-center gap-2">
+          <a
+            href="/admin/gemachs"
+            className="text-xs font-semibold text-slate-500 hover:text-navy px-3 py-1.5 rounded-lg border border-slate-200 hover:border-navy transition-colors"
+          >
+            Gemachs
+          </a>
+          <form action={adminLogout}>
+            <button className="text-xs font-semibold text-slate-500 hover:text-navy px-3 py-1.5 rounded-lg border border-slate-200 hover:border-navy transition-colors">
+              Sign out
+            </button>
+          </form>
+        </div>
       </div>
 
       {suggestions.length === 0 ? (

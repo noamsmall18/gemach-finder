@@ -60,6 +60,19 @@ export async function deleteSuggestion(id: string) {
   revalidatePath('/admin/suggestions')
 }
 
+export async function toggleOperatorConfirmed(id: string, next: boolean) {
+  if (!(await isAdmin())) redirect('/admin')
+  const supabase = getServiceClient()
+  const { error } = await supabase
+    .from('gemachs')
+    .update({ operator_confirmed: next })
+    .eq('id', id)
+  if (error) throw error
+  revalidatePath('/admin/gemachs')
+  revalidatePath('/')
+  revalidatePath('/v2')
+}
+
 export async function approveSuggestion(id: string, formData: FormData) {
   if (!(await isAdmin())) redirect('/admin')
   const supabase = getServiceClient()
