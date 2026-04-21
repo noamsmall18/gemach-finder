@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { ArrowUp } from 'lucide-react'
 
 interface FooterProps {
@@ -15,12 +16,13 @@ export default function Footer({ gemachCount }: FooterProps) {
           {/* Brand */}
           <div className="max-w-xs">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-md bg-white/10 flex items-center justify-center">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="sm:w-[14px] sm:h-[14px]">
-                  <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 11.5 7.68 12.07a.5.5 0 0 0 .64 0C13 21.5 20 15.25 20 10c0-4.42-3.58-8-8-8z" fill="#5E94B8"/>
-                  <circle cx="12" cy="10" r="3.5" fill="white"/>
-                </svg>
-              </div>
+              <Image
+                src="/logo.png"
+                alt="GemachFinder"
+                width={28}
+                height={28}
+                className="w-7 h-7 sm:w-8 sm:h-8"
+              />
               <span className="font-heading text-sm sm:text-base font-bold text-white">GemachFinder</span>
             </Link>
             <p className="text-xs sm:text-sm text-white/40 mt-2 sm:mt-3 leading-relaxed">

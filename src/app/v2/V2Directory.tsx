@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   Phone, Mail, Globe, MapPin, Search, X, ArrowDown, ArrowUp, ArrowRight,
   AlertCircle, ChevronRight, Share2, Check, User, Clock, FileText, ArrowUpRight, BadgeCheck
@@ -469,12 +470,13 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
           <div className="flex flex-col md:flex-row items-start justify-between gap-8">
             <div className="max-w-xs">
               <Link href="/v2" className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-md bg-white/[0.06] flex items-center justify-center">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                    <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7 11.5 7.68 12.07a.5.5 0 0 0 .64 0C13 21.5 20 15.25 20 10c0-4.42-3.58-8-8-8z" fill="#5E94B8"/>
-                    <circle cx="12" cy="10" r="3.5" fill="white"/>
-                  </svg>
-                </div>
+                <Image
+                  src="/logo.png"
+                  alt="GemachFinder"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8"
+                />
                 <span className="font-heading text-base font-bold text-white/80">GemachFinder</span>
               </Link>
               <p className="text-sm text-white/25 mt-3 leading-relaxed">
