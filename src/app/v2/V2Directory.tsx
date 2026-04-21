@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import {
   Phone, Mail, Globe, MapPin, Search, X, ArrowDown, ArrowUp, ArrowRight,
-  AlertCircle, ChevronRight, Share2, Check, User, Clock, FileText, ArrowUpRight
+  AlertCircle, ChevronRight, Share2, Check, User, Clock, FileText, ArrowUpRight, BadgeCheck
 } from 'lucide-react'
 import type { Gemach } from '@/lib/types'
 import { CATEGORIES, LOCATIONS, CATEGORY_ACCENT_COLORS, getCategoryEmoji, getCategoryColors } from '@/lib/constants'
@@ -371,7 +371,14 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                         </div>
                         {/* Title */}
                         <h3 className="font-heading text-[17px] md:text-lg font-bold text-white/90 group-hover:text-indigo-300 transition-colors duration-300 leading-snug">
-                          {gemach.name}
+                          <span className="inline">{gemach.name}</span>
+                          {gemach.verified && (
+                            <BadgeCheck
+                              className="inline-block w-[18px] h-[18px] ml-1 -mt-0.5 text-sky-400 shrink-0 align-middle"
+                              strokeWidth={2.25}
+                              aria-label="Verified gemach"
+                            />
+                          )}
                         </h3>
                         {/* Description */}
                         <p className="text-[13px] md:text-sm text-white/30 mt-2 leading-relaxed line-clamp-2">{gemach.description}</p>
@@ -522,7 +529,16 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                     </div>
 
                     <div className="px-5 pb-8">
-                      <h2 className="font-heading text-xl md:text-2xl font-bold text-white leading-tight">{gemach.name}</h2>
+                      <h2 className="font-heading text-xl md:text-2xl font-bold text-white leading-tight">
+                        <span className="inline">{gemach.name}</span>
+                        {gemach.verified && (
+                          <BadgeCheck
+                            className="inline-block w-[22px] h-[22px] ml-1.5 -mt-1 text-sky-400 shrink-0 align-middle"
+                            strokeWidth={2.25}
+                            aria-label="Verified gemach"
+                          />
+                        )}
+                      </h2>
                       <div className="flex items-center gap-1 mt-1.5 text-sm text-white/30">
                         <MapPin className="w-3.5 h-3.5" />{gemach.location}
                       </div>

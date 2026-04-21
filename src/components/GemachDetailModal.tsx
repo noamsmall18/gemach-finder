@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Phone, Mail, Globe, MapPin, Clock, User, FileText, AlertCircle, ArrowUpRight, Share2, Check } from 'lucide-react'
+import { X, Phone, Mail, Globe, MapPin, Clock, User, FileText, AlertCircle, ArrowUpRight, Share2, Check, BadgeCheck } from 'lucide-react'
 import type { Gemach } from '@/lib/types'
 import { getCategoryEmoji, CATEGORY_ACCENT_COLORS } from '@/lib/constants'
 
@@ -141,7 +141,14 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
                 {/* Content */}
                 <div className="px-4 sm:px-5 pb-8">
                   <h2 className="font-heading text-lg sm:text-xl md:text-2xl font-bold text-slate-800 leading-tight">
-                    {gemach.name}
+                    <span className="inline">{gemach.name}</span>
+                    {gemach.verified && (
+                      <BadgeCheck
+                        className="inline-block w-5 h-5 sm:w-[22px] sm:h-[22px] ml-1.5 -mt-1 text-sky-500 shrink-0 align-middle"
+                        strokeWidth={2.25}
+                        aria-label="Verified gemach"
+                      />
+                    )}
                   </h2>
                   <div className="flex items-center gap-1 mt-1 sm:mt-1.5 text-xs sm:text-sm text-slate-400">
                     <MapPin className="w-3.5 h-3.5" />

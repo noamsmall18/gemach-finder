@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Phone, Mail, Globe, MapPin, AlertCircle, ChevronRight } from 'lucide-react'
+import { Phone, Mail, Globe, MapPin, AlertCircle, ChevronRight, BadgeCheck } from 'lucide-react'
 import type { Gemach } from '@/lib/types'
 import { getCategoryEmoji, getCategoryColors, CATEGORY_ACCENT_COLORS } from '@/lib/constants'
 
@@ -54,7 +54,14 @@ export default function GemachCard({ gemach, index, onSelect }: GemachCardProps)
 
         {/* Title */}
         <h3 className="font-heading text-[15px] sm:text-[17px] md:text-lg font-bold text-slate-800 group-hover:text-navy transition-colors duration-300 leading-snug">
-          {gemach.name}
+          <span className="inline">{gemach.name}</span>
+          {gemach.verified && (
+            <BadgeCheck
+              className="inline-block w-4 h-4 sm:w-[18px] sm:h-[18px] ml-1 -mt-0.5 text-sky-500 shrink-0 align-middle"
+              strokeWidth={2.25}
+              aria-label="Verified gemach"
+            />
+          )}
         </h3>
 
         {/* Description */}
