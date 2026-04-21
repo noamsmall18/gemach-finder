@@ -34,6 +34,7 @@ export default function Footer({ gemachCount }: FooterProps) {
               <h4 className="text-[10px] sm:text-xs font-semibold text-white/50 uppercase tracking-wider mb-2 sm:mb-3">Navigate</h4>
               <div className="flex flex-col gap-1.5 sm:gap-2">
                 <Link href="/" className="text-xs sm:text-sm hover:text-white transition-colors">Directory</Link>
+                <Link href="/map" className="text-xs sm:text-sm hover:text-white transition-colors">Map</Link>
                 <Link href="/requests" className="text-xs sm:text-sm hover:text-white transition-colors">Create</Link>
                 <Link href="/suggest" className="text-xs sm:text-sm hover:text-white transition-colors">Missing One?</Link>
               </div>
@@ -42,8 +43,9 @@ export default function Footer({ gemachCount }: FooterProps) {
               <h4 className="text-[10px] sm:text-xs font-semibold text-white/50 uppercase tracking-wider mb-2 sm:mb-3">Info</h4>
               <div className="flex flex-col gap-1.5 sm:gap-2">
                 <span className="text-xs sm:text-sm">{gemachCount} gemachs</span>
-                <span className="text-xs sm:text-sm">7 categories</span>
-                <span className="text-xs sm:text-sm">100% free</span>
+                <span className="text-xs sm:text-sm">8 categories</span>
+                <Link href="/about" className="text-xs sm:text-sm hover:text-white transition-colors">About</Link>
+                <Link href="/privacy" className="text-xs sm:text-sm hover:text-white transition-colors">Privacy</Link>
               </div>
             </div>
           </div>

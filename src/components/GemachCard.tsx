@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { Phone, Mail, Globe, MapPin, AlertCircle, ChevronRight, BadgeCheck } from 'lucide-react'
 import type { Gemach } from '@/lib/types'
 import { getCategoryEmoji, getCategoryColors, CATEGORY_ACCENT_COLORS } from '@/lib/constants'
+import OpenNowBadge from './OpenNowBadge'
 
 interface GemachCardProps {
   gemach: Gemach
@@ -46,10 +47,13 @@ export default function GemachCard({ gemach, index, onSelect }: GemachCardProps)
             <span className="text-sm not-italic normal-case">{emoji}</span>
             <span className="text-[10px]">{gemach.category}</span>
           </span>
-          <span className="flex items-center gap-1 text-[10px] sm:text-[11px] text-slate-400 shrink-0 font-medium">
-            <MapPin className="w-3 h-3" />
-            <span className="max-w-[80px] sm:max-w-none truncate">{gemach.location}</span>
-          </span>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <OpenNowBadge hours={gemach.hours} />
+            <span className="flex items-center gap-1 text-[10px] sm:text-[11px] text-slate-400 font-medium">
+              <MapPin className="w-3 h-3" />
+              <span className="max-w-[80px] sm:max-w-none truncate">{gemach.location}</span>
+            </span>
+          </div>
         </div>
 
         {/* Title */}

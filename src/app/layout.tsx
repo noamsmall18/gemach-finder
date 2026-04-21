@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Lora, Nunito } from 'next/font/google'
+import Script from 'next/script'
 import ScrollNav from '@/components/ScrollNav'
 import RootNav from '@/components/RootNav'
 import BackToTop from '@/components/BackToTop'
@@ -47,9 +48,19 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const plausibleDomain = process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN
+
   return (
     <html lang="en" id="top" className={`${lora.variable} ${nunito.variable}`}>
       <body className="min-h-screen flex flex-col">
+        {plausibleDomain && (
+          <Script
+            defer
+            data-domain={plausibleDomain}
+            src="https://plausible.io/js/script.js"
+            strategy="afterInteractive"
+          />
+        )}
         <ThemeRedirect />
         <ScrollNav />
         <RootNav />
