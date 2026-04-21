@@ -38,7 +38,7 @@ export default async function MapPage() {
           Gemach Map
         </h1>
         <p className="text-sm sm:text-base text-slate-600 mt-1">
-          Circle size shows how many gemachs are in each town. Click a circle to see the list.
+          Each pin is a gemach. Zoom in to see individual locations, or click a cluster to expand it.
         </p>
       </section>
 

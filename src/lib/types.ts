@@ -13,6 +13,8 @@ export interface Gemach {
   notes: string | null
   verified: boolean
   operator_confirmed: boolean
+  lat: number | null
+  lng: number | null
   priority: number
   created_at: string
 }
