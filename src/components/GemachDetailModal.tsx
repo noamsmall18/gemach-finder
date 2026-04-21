@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Phone, Mail, Globe, MapPin, Clock, User, FileText, AlertCircle, ArrowUpRight, Share2, Check, BadgeCheck } from 'lucide-react'
+import { X, Phone, Mail, Globe, MapPin, Clock, User, FileText, AlertCircle, ArrowUpRight, Share2, Check, BadgeCheck, MessageSquare, ExternalLink } from 'lucide-react'
 import type { Gemach } from '@/lib/types'
 import { getCategoryEmoji, CATEGORY_ACCENT_COLORS } from '@/lib/constants'
 
@@ -178,6 +179,22 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
                         </a>
                       )}
 
+                      {gemach.contact_phone && (
+                        <a
+                          href={`sms:${gemach.contact_phone.replace(/[^+\d]/g, '')}`}
+                          className="flex items-center gap-3 w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 active:scale-[0.98] transition-all"
+                        >
+                          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-sky-100 flex items-center justify-center shrink-0">
+                            <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="text-[10px] text-sky-500 font-semibold uppercase tracking-wider">Text</div>
+                            <div className="text-xs sm:text-sm truncate font-medium">{gemach.contact_phone}</div>
+                          </div>
+                          <ArrowUpRight className="w-3.5 h-3.5 ml-auto shrink-0 opacity-30" />
+                        </a>
+                      )}
+
                       {gemach.contact_email && (
                         <a
                           href={`mailto:${gemach.contact_email}`}
@@ -271,6 +288,17 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
                           </div>
                         </div>
                       )}
+                    </div>
+                  )}
+
+                  {gemach.slug && (
+                    <div className="mt-6 pt-5 border-t border-slate-100">
+                      <Link
+                        href={`/g/${gemach.slug}`}
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-navy hover:text-navy/80 transition-colors"
+                      >
+                        View full page <ExternalLink className="w-3.5 h-3.5" />
+                      </Link>
                     </div>
                   )}
                 </div>

@@ -5,6 +5,7 @@ import ScrollNav from '@/components/ScrollNav'
 import RootNav from '@/components/RootNav'
 import BackToTop from '@/components/BackToTop'
 import ThemeRedirect from '@/components/ThemeRedirect'
+import PWAInstallPrompt from '@/components/PWAInstallPrompt'
 import './globals.css'
 
 const lora = Lora({
@@ -67,6 +68,7 @@ export default function RootLayout({
 
         <main className="flex-1">{children}</main>
         <BackToTop />
+        <PWAInstallPrompt />
       </body>
     </html>
   )

@@ -59,6 +59,12 @@ export default async function AdminSuggestionsPage() {
           >
             Gemachs
           </a>
+          <a
+            href="/admin/reports"
+            className="text-xs font-semibold text-slate-500 hover:text-navy px-3 py-1.5 rounded-lg border border-slate-200 hover:border-navy transition-colors"
+          >
+            Reports
+          </a>
           <form action={adminLogout}>
             <button className="text-xs font-semibold text-slate-500 hover:text-navy px-3 py-1.5 rounded-lg border border-slate-200 hover:border-navy transition-colors">
               Sign out

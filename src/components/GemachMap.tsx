@@ -1,12 +1,13 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import 'leaflet.markercluster'
+import { Navigation } from 'lucide-react'
 import type { Gemach } from '@/lib/types'
 import { TOWN_COORDS } from '@/lib/townCoords'
 import { getCategoryEmoji } from '@/lib/constants'
@@ -91,13 +92,14 @@ function MarkersLayer({ gemachs }: GemachMapProps) {
       const approxNote = r.precise
         ? ''
         : '<div style="color:#94a3b8;font-size:11px;margin-top:4px;font-style:italic;">Approximate location</div>'
+      const href = g.slug ? `/g/${g.slug}` : `/?open=${g.id}`
       marker.bindPopup(
         `<div style="min-width:220px;font-family:system-ui,-apple-system,sans-serif;">
           <div style="font-weight:700;color:#1E3A64;font-size:15px;margin-bottom:4px;line-height:1.25;">
             <span style="margin-right:4px;">${emoji}</span>${escapeHtml(g.name)}${checkmark}
           </div>
           <div style="color:#64748b;font-size:12px;margin-bottom:10px;">${escapeHtml(g.location)} · ${escapeHtml(g.category)}</div>
-          <a href="/?open=${g.id}" style="color:#1E3A64;font-weight:600;font-size:13px;text-decoration:underline;">View details →</a>
+          <a href="${href}" style="color:#1E3A64;font-weight:600;font-size:13px;text-decoration:underline;">View details →</a>
           ${approxNote}
         </div>`
       )
@@ -115,6 +117,56 @@ function MarkersLayer({ gemachs }: GemachMapProps) {
   return null
 }
 
+function NearMeButton() {
+  const map = useMap()
+  const [state, setState] = useState<'idle' | 'locating' | 'error'>('idle')
+
+  function handleClick() {
+    if (!navigator.geolocation) {
+      setState('error')
+      setTimeout(() => setState('idle'), 2500)
+      return
+    }
+    setState('locating')
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const ll: [number, number] = [pos.coords.latitude, pos.coords.longitude]
+        map.flyTo(ll, 14, { duration: 0.8 })
+        L.circleMarker(ll, {
+          radius: 8,
+          color: '#0ea5e9',
+          fillColor: '#0ea5e9',
+          fillOpacity: 0.9,
+          weight: 3,
+        })
+          .addTo(map)
+          .bindTooltip('You', { permanent: true, direction: 'top', offset: [0, -10] })
+        setState('idle')
+      },
+      () => {
+        setState('error')
+        setTimeout(() => setState('idle'), 2500)
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+    )
+  }
+
+  const label =
+    state === 'locating' ? 'Locating...' : state === 'error' ? 'Location blocked' : 'Near me'
+
+  return (
+    <button
+      onClick={handleClick}
+      className="absolute top-3 right-3 z-[400] inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white text-slate-700 shadow-md border border-slate-200 text-xs font-semibold hover:bg-slate-50 active:bg-slate-100 transition-colors"
+      type="button"
+      aria-label="Center map on my location"
+    >
+      <Navigation className={`w-3.5 h-3.5 ${state === 'locating' ? 'animate-pulse' : ''}`} />
+      {label}
+    </button>
+  )
+}
+
 export default function GemachMap({ gemachs }: GemachMapProps) {
   return (
     <MapContainer
@@ -130,6 +182,7 @@ export default function GemachMap({ gemachs }: GemachMapProps) {
         maxZoom={20}
       />
       <MarkersLayer gemachs={gemachs} />
+      <NearMeButton />
     </MapContainer>
   )
 }

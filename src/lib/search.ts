@@ -83,6 +83,24 @@ const SYNONYMS: Record<string, string[]> = {
   'bris': ['circumcision', 'baby', 'milah'],
   'earmuffs': ['ear', 'hearing', 'protection', 'simcha'],
   'housewares': ['kallah', 'kitchen', 'bride', 'household'],
+  // Hebrew transliteration variants
+  'gmach': ['gemach', 'gemilus'],
+  'gemach': ['gmach', 'gemilus', 'chessed', 'chesed'],
+  'gemilus': ['gemach', 'gmach', 'chessed', 'chesed'],
+  'chessed': ['chesed', 'gemach', 'gemilus'],
+  'tzedakah': ['tzedaka', 'charity', 'financial', 'loan'],
+  'tzedaka': ['tzedakah', 'charity', 'financial', 'loan'],
+  'kallah': ['bride', 'wedding', 'gown', 'dress'],
+  'chosson': ['groom', 'wedding', 'chasan'],
+  'chasan': ['chosson', 'groom', 'wedding'],
+  'seudah': ['meal', 'food', 'shabbos'],
+  'milah': ['bris', 'circumcision', 'baby'],
+  'bar mitzvah': ['simcha', 'tefillin', 'judaica'],
+  'bat mitzvah': ['simcha', 'judaica'],
+  'yahrzeit': ['memorial', 'candle'],
+  'aliyah': ['moving', 'israel'],
+  'nursing': ['medical', 'baby', 'infant'],
+  'formula': ['baby', 'infant', 'food'],
 }
 
 export function searchGemachs(gemachs: Gemach[], query: string): Gemach[] {

@@ -15,6 +15,10 @@ export interface Gemach {
   operator_confirmed: boolean
   lat: number | null
   lng: number | null
+  slug: string | null
+  photo_url: string | null
+  used_count: number
+  report_count: number
   priority: number
   created_at: string
 }

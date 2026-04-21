@@ -30,6 +30,24 @@ export default function SearchBar({ value, onChange, suggestions = [] }: SearchB
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null
+      const tag = target?.tagName
+      const inField =
+        tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target?.isContentEditable
+      if (e.key === '/' && !inField) {
+        e.preventDefault()
+        inputRef.current?.focus()
+        inputRef.current?.select()
+      } else if (e.key === 'Escape' && document.activeElement === inputRef.current) {
+        inputRef.current?.blur()
+      }
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [])
+
   return (
     <div className="max-w-2xl mx-auto" ref={containerRef}>
       <div className="relative">
@@ -49,8 +67,13 @@ export default function SearchBar({ value, onChange, suggestions = [] }: SearchB
             onFocus={() => setFocused(true)}
             onBlur={() => setTimeout(() => setFocused(false), 150)}
             placeholder="Search gemachs..."
-            className="w-full pl-10 sm:pl-11 pr-10 py-3 sm:py-3.5 text-sm bg-transparent rounded-xl outline-none placeholder:text-slate-300"
+            className="w-full pl-10 sm:pl-11 pr-16 py-3 sm:py-3.5 text-sm bg-transparent rounded-xl outline-none placeholder:text-slate-300"
           />
+          {!focused && !value && (
+            <kbd className="hidden sm:inline-flex absolute right-3 top-1/2 -translate-y-1/2 items-center justify-center min-w-[20px] h-5 px-1.5 rounded bg-slate-100 text-[10px] font-mono text-slate-400 border border-slate-200 pointer-events-none">
+              /
+            </kbd>
+          )}
           <AnimatePresence>
             {value && (
               <motion.button

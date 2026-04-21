@@ -90,6 +90,21 @@ export async function approveSuggestion(id: string, formData: FormData) {
     throw new Error('name, category, description, and location are required')
   }
 
+  const baseSlug = name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+  let slug = baseSlug
+  for (let n = 2; n < 50; n++) {
+    const { data: existing } = await supabase
+      .from('gemachs')
+      .select('id')
+      .eq('slug', slug)
+      .maybeSingle()
+    if (!existing) break
+    slug = `${baseSlug}-${n}`
+  }
+
   const { error: insertError } = await supabase.from('gemachs').insert({
     name,
     category,
@@ -99,6 +114,7 @@ export async function approveSuggestion(id: string, formData: FormData) {
     contact_email,
     contact_website,
     hours,
+    slug,
     verified: true,
     priority: 0,
   })
