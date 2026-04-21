@@ -142,11 +142,11 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
                 <div className="px-4 sm:px-5 pb-8">
                   <h2 className="font-heading text-lg sm:text-xl md:text-2xl font-bold text-slate-800 leading-tight">
                     <span className="inline">{gemach.name}</span>
-                    {gemach.verified && (
+                    {gemach.operator_confirmed && (
                       <BadgeCheck
                         className="inline-block w-5 h-5 sm:w-[22px] sm:h-[22px] ml-1.5 -mt-1 text-sky-500 shrink-0 align-middle"
                         strokeWidth={2.25}
-                        aria-label="Verified gemach"
+                        aria-label="Confirmed by operator"
                       />
                     )}
                   </h2>

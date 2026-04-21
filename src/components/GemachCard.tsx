@@ -59,11 +59,11 @@ export default function GemachCard({ gemach, index, onSelect }: GemachCardProps)
         {/* Title */}
         <h3 className="font-heading text-[15px] sm:text-[17px] md:text-lg font-bold text-slate-800 group-hover:text-navy transition-colors duration-300 leading-snug">
           <span className="inline">{gemach.name}</span>
-          {gemach.verified && (
+          {gemach.operator_confirmed && (
             <BadgeCheck
               className="inline-block w-4 h-4 sm:w-[18px] sm:h-[18px] ml-1 -mt-0.5 text-sky-500 shrink-0 align-middle"
               strokeWidth={2.25}
-              aria-label="Verified gemach"
+              aria-label="Confirmed by operator"
             />
           )}
         </h3>

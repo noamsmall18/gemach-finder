@@ -394,11 +394,11 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                         {/* Title */}
                         <h3 className="font-heading text-[17px] md:text-lg font-bold text-white/90 group-hover:text-sea-light transition-colors duration-300 leading-snug">
                           <span className="inline">{gemach.name}</span>
-                          {gemach.verified && (
+                          {gemach.operator_confirmed && (
                             <BadgeCheck
                               className="inline-block w-[18px] h-[18px] ml-1 -mt-0.5 text-sky-400 shrink-0 align-middle"
                               strokeWidth={2.25}
-                              aria-label="Verified gemach"
+                              aria-label="Confirmed by operator"
                             />
                           )}
                         </h3>
@@ -559,11 +559,11 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                     <div className="px-5 pb-8">
                       <h2 className="font-heading text-xl md:text-2xl font-bold text-white leading-tight">
                         <span className="inline">{gemach.name}</span>
-                        {gemach.verified && (
+                        {gemach.operator_confirmed && (
                           <BadgeCheck
                             className="inline-block w-[22px] h-[22px] ml-1.5 -mt-1 text-sky-400 shrink-0 align-middle"
                             strokeWidth={2.25}
-                            aria-label="Verified gemach"
+                            aria-label="Confirmed by operator"
                           />
                         )}
                       </h2>

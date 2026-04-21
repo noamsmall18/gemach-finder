@@ -12,6 +12,7 @@ export interface Gemach {
   hours: string | null
   notes: string | null
   verified: boolean
+  operator_confirmed: boolean
   priority: number
   created_at: string
 }
