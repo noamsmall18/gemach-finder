@@ -4,6 +4,7 @@ export const CATEGORIES = [
   { name: 'Simcha & Events', emoji: '🎉' },
   { name: 'Clothing', emoji: '👗' },
   { name: 'Household', emoji: '🏠' },
+  { name: 'Food', emoji: '🍞' },
   { name: 'Financial/Loans', emoji: '💰' },
   { name: 'Seforim & Judaica', emoji: '📚' },
 ] as const
@@ -30,6 +31,7 @@ export const CATEGORY_COLORS: Record<string, { text: string; bg: string }> = {
   'Simcha & Events': { text: 'text-purple-700', bg: 'bg-purple-50' },
   'Clothing': { text: 'text-orange-700', bg: 'bg-orange-50' },
   'Household': { text: 'text-yellow-800', bg: 'bg-yellow-50' },
+  'Food': { text: 'text-rose-700', bg: 'bg-rose-50' },
   'Financial/Loans': { text: 'text-navy', bg: 'bg-indigo-50' },
   'Seforim & Judaica': { text: 'text-blue-700', bg: 'bg-blue-50' },
 }
@@ -40,6 +42,7 @@ export const CATEGORY_ACCENT_COLORS: Record<string, string> = {
   'Simcha & Events': '#8B5AB8',
   'Clothing': '#C4572A',
   'Household': '#7A6840',
+  'Food': '#B8415A',
   'Financial/Loans': '#1E2A5E',
   'Seforim & Judaica': '#3B7BA8',
 }
