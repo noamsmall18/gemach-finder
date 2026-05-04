@@ -1,21 +1,12 @@
 import type { Metadata } from 'next'
-import { createClient } from '@supabase/supabase-js'
 import Footer from '@/components/Footer'
+import { getGemachCount } from '@/lib/data'
 
 export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Privacy - GemachFinder',
   description: 'How GemachFinder handles data and your privacy.',
-}
-
-async function getGemachCount(): Promise<number> {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-  const { count } = await supabase.from('gemachs').select('*', { count: 'exact', head: true }).eq('verified', true)
-  return count || 0
 }
 
 export default async function PrivacyPage() {

@@ -12,18 +12,15 @@ interface SearchBarProps {
 
 export default function SearchBar({ value, onChange, suggestions = [] }: SearchBarProps) {
   const [focused, setFocused] = useState(false)
-  const [showSuggestions, setShowSuggestions] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    setShowSuggestions(focused && suggestions.length > 0 && value.length >= 2)
-  }, [focused, suggestions, value])
+  const showSuggestions = focused && suggestions.length > 0 && value.length >= 2
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setShowSuggestions(false)
+        setFocused(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -81,6 +78,7 @@ export default function SearchBar({ value, onChange, suggestions = [] }: SearchB
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 onClick={() => { onChange(''); inputRef.current?.focus() }}
+                aria-label="Clear search"
                 className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-md bg-slate-100 hover:bg-slate-200 transition-colors"
               >
                 <X className="w-3 h-3 text-slate-500" />
@@ -105,7 +103,7 @@ export default function SearchBar({ value, onChange, suggestions = [] }: SearchB
                   onMouseDown={(e) => {
                     e.preventDefault()
                     onChange(suggestion)
-                    setShowSuggestions(false)
+                    setFocused(false)
                   }}
                   className="w-full px-4 py-2.5 text-left text-sm text-slate-600 hover:bg-slate-50 hover:text-navy transition-colors flex items-center gap-2"
                 >

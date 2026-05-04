@@ -5,6 +5,7 @@ import { Share2, Check, Flag, ThumbsUp } from 'lucide-react'
 import { markUsed, reportOutdated } from '@/app/g/[slug]/actions'
 import type { Gemach } from '@/lib/types'
 import { getCategoryEmoji } from '@/lib/constants'
+import GemachUpdateRequestForm from './GemachUpdateRequestForm'
 
 interface Props {
   gemach: Gemach
@@ -119,6 +120,8 @@ export default function GemachPageActions({ gemach }: Props) {
         </button>
       </div>
 
+      <GemachUpdateRequestForm gemach={gemach} />
+
       {reportOpen && (
         <form
           onSubmit={handleReportSubmit}
@@ -127,12 +130,12 @@ export default function GemachPageActions({ gemach }: Props) {
           {reportSent ? (
             <div className="text-sm text-emerald-700 flex items-center gap-2">
               <Check className="w-4 h-4" />
-              Thanks, we'll check on this.
+              Thanks, we&apos;ll check on this.
             </div>
           ) : (
             <>
               <label className="block text-xs font-semibold uppercase tracking-wider text-amber-700">
-                What's out of date?
+                What&apos;s out of date?
               </label>
               <textarea
                 value={reportReason}

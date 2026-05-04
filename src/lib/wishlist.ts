@@ -17,59 +17,6 @@ export async function fetchWishlistItems(): Promise<WishlistItem[]> {
   return data || []
 }
 
-export async function submitWishlistItem(item: {
-  name: string
-  category: string
-  description?: string
-  requested_by?: string
-}): Promise<WishlistItem | null> {
-  const { data, error } = await supabase
-    .from('wishlist_items')
-    .insert({
-      name: item.name,
-      category: item.category,
-      description: item.description || null,
-      requested_by: item.requested_by || null,
-    })
-    .select()
-    .single()
-
-  if (error) {
-    console.error('Error submitting wishlist item:', error)
-    return null
-  }
-
-  return data
-}
-
-export async function voteForItem(itemId: string, fingerprint: string): Promise<boolean> {
-  const { data, error } = await supabase.rpc('vote_wishlist_item', {
-    item_id: itemId,
-    fingerprint,
-  })
-
-  if (error) {
-    console.error('Error voting:', error)
-    return false
-  }
-
-  return data === true
-}
-
-export async function unvoteForItem(itemId: string, fingerprint: string): Promise<boolean> {
-  const { data, error } = await supabase.rpc('unvote_wishlist_item', {
-    item_id: itemId,
-    fingerprint,
-  })
-
-  if (error) {
-    console.error('Error unvoting:', error)
-    return false
-  }
-
-  return data === true
-}
-
 const FINGERPRINT_KEY = 'gemach-voter-id'
 const VOTED_KEY = 'gemach-wishlist-votes'
 

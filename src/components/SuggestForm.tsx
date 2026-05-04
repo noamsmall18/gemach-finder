@@ -1,10 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Check, Send, Sparkles } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { submitSuggestionAction } from '@/app/suggest/actions'
 import { CATEGORIES } from '@/lib/constants'
+
+const MIN_FORM_TIME_MS = 2500
+const MAX_NAME = 120
+const MAX_DESCRIPTION = 1000
+const MAX_CONTACT = 200
+const MAX_SUBMITTER = 120
 
 export default function SuggestForm() {
   const [form, setForm] = useState({
@@ -14,13 +20,29 @@ export default function SuggestForm() {
     contact_info: '',
     submitted_by: '',
   })
+  const [honeypot, setHoneypot] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
+  const mountedAtRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    mountedAtRef.current = Date.now()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+
+    if (honeypot) {
+      setSubmitted(true)
+      return
+    }
+
+    if (mountedAtRef.current && Date.now() - mountedAtRef.current < MIN_FORM_TIME_MS) {
+      setError('Please take a moment to fill in the details.')
+      return
+    }
 
     if (!form.gemach_name || !form.category || !form.description || !form.contact_info) {
       setError('Please fill in all required fields.')
@@ -28,20 +50,24 @@ export default function SuggestForm() {
     }
 
     setSubmitting(true)
-    const { error: insertError } = await supabase
-      .from('suggestions')
-      .insert({
-        gemach_name: form.gemach_name,
-        category: form.category,
-        description: form.description,
-        contact_info: form.contact_info,
-        submitted_by: form.submitted_by || null,
-      })
+    const result = await submitSuggestionAction({
+      gemach_name: form.gemach_name,
+      category: form.category,
+      description: form.description,
+      contact_info: form.contact_info,
+      submitted_by: form.submitted_by || undefined,
+    })
 
     setSubmitting(false)
 
-    if (insertError) {
-      setError('Something went wrong. Please try again.')
+    if (!result.ok) {
+      if (result.error === 'rate_limited') {
+        setError('You\'ve submitted a few suggestions recently. Please try again in an hour.')
+      } else if (result.error === 'invalid') {
+        setError('Please fill in all required fields.')
+      } else {
+        setError('Something went wrong. Please try again.')
+      }
       return
     }
 
@@ -106,6 +132,20 @@ export default function SuggestForm() {
                 </p>
 
                 <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+                  {/* Honeypot — real users never see this */}
+                  <div aria-hidden="true" className="absolute left-[-9999px] top-auto w-px h-px overflow-hidden">
+                    <label>
+                      Website
+                      <input
+                        type="text"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={honeypot}
+                        onChange={(e) => setHoneypot(e.target.value)}
+                      />
+                    </label>
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">
@@ -114,6 +154,7 @@ export default function SuggestForm() {
                       <input
                         type="text"
                         value={form.gemach_name}
+                        maxLength={MAX_NAME}
                         onChange={(e) => setForm({ ...form, gemach_name: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl border border-slate-200/80 bg-white/80 outline-none focus:border-navy focus:ring-2 focus:ring-navy/5 transition-all text-sm"
                         placeholder="e.g. Teaneck Toy Gemach"
@@ -145,6 +186,7 @@ export default function SuggestForm() {
                     </label>
                     <textarea
                       value={form.description}
+                      maxLength={MAX_DESCRIPTION}
                       onChange={(e) => setForm({ ...form, description: e.target.value })}
                       rows={3}
                       className="w-full px-4 py-3 rounded-xl border border-slate-200/80 bg-white/80 outline-none focus:border-navy focus:ring-2 focus:ring-navy/5 transition-all resize-none text-sm"
@@ -160,6 +202,7 @@ export default function SuggestForm() {
                       <input
                         type="text"
                         value={form.contact_info}
+                        maxLength={MAX_CONTACT}
                         onChange={(e) => setForm({ ...form, contact_info: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl border border-slate-200/80 bg-white/80 outline-none focus:border-navy focus:ring-2 focus:ring-navy/5 transition-all text-sm"
                         placeholder="Phone, email, or website"
@@ -173,6 +216,7 @@ export default function SuggestForm() {
                       <input
                         type="text"
                         value={form.submitted_by}
+                        maxLength={MAX_SUBMITTER}
                         onChange={(e) => setForm({ ...form, submitted_by: e.target.value })}
                         className="w-full px-4 py-3 rounded-xl border border-slate-200/80 bg-white/80 outline-none focus:border-navy focus:ring-2 focus:ring-navy/5 transition-all text-sm"
                         placeholder="So we can follow up"

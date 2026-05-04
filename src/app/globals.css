@@ -37,6 +37,56 @@ html {
   display: none;
 }
 
+.gemach-map {
+  background: #e2e8f0;
+}
+
+.gemach-map .leaflet-popup-content-wrapper {
+  border-radius: 14px;
+}
+
+.gemach-map .leaflet-popup-content {
+  margin: 12px 14px;
+}
+
+.gemach-map-dark {
+  background: #0f172a;
+}
+
+.gemach-map-dark .leaflet-popup-content-wrapper {
+  background: #0f172a;
+  color: #e2e8f0;
+  box-shadow: 0 16px 40px rgba(2, 6, 23, 0.45);
+}
+
+.gemach-map-dark .leaflet-popup-tip {
+  background: #0f172a;
+}
+
+.gemach-map-dark .leaflet-popup-close-button {
+  color: #cbd5e1;
+}
+
+.gemach-map-dark .leaflet-popup-close-button:hover {
+  color: #fff;
+}
+
+.gemach-map-dark .leaflet-control-zoom a,
+.gemach-map-dark .leaflet-control-attribution {
+  background: rgba(15, 23, 42, 0.88);
+  color: #cbd5e1;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.gemach-map-dark .leaflet-control-zoom a:hover {
+  background: #111827;
+  color: #fff;
+}
+
+.gemach-map-dark .leaflet-control-attribution a {
+  color: #93c5fd;
+}
+
 ::selection {
   background-color: rgba(30, 58, 100, 0.15);
 }

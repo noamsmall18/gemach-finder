@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { Phone, Mail, Globe, MapPin, Clock, User, FileText, AlertCircle, ArrowUpRight, ChevronLeft, BadgeCheck } from 'lucide-react'
-import { getAllSlugs, getGemachBySlug, getGemachsByLocation, siteUrl, townToSlug } from '@/lib/data'
+import { Phone, Mail, Globe, MapPin, Clock, User, FileText, AlertCircle, ArrowUpRight, ChevronLeft, ChevronRight, BadgeCheck, MessageSquare, TrendingUp } from 'lucide-react'
+import { getAllSlugs, getGemachBySlug, getGemachsByLocation, getSiblings, siteUrl, townToSlug } from '@/lib/data'
 import { getCategoryEmoji, CATEGORY_ACCENT_COLORS } from '@/lib/constants'
 import GemachPageActions from '@/components/GemachPageActions'
 import OpenNowBadge from '@/components/OpenNowBadge'
@@ -30,6 +30,7 @@ export async function generateMetadata({
       ? gemach.description.slice(0, 157) + '...'
       : gemach.description
   const url = `${siteUrl()}/g/${slug}`
+  const ogImage = gemach.photo_url || `${siteUrl()}/og?title=${encodeURIComponent(gemach.name)}&sub=${encodeURIComponent(gemach.location + ' · ' + gemach.category)}`
 
   return {
     title,
@@ -41,13 +42,13 @@ export async function generateMetadata({
       url,
       type: 'website',
       siteName: 'GemachFinder',
-      images: gemach.photo_url ? [{ url: gemach.photo_url }] : undefined,
+      images: [{ url: ogImage, width: 1200, height: 630, alt: gemach.name }],
     },
     twitter: {
       card: 'summary_large_image',
       title: gemach.name,
       description: desc,
-      images: gemach.photo_url ? [gemach.photo_url] : undefined,
+      images: [ogImage],
     },
   }
 }
@@ -61,13 +62,16 @@ export default async function GemachPage({
   const gemach = await getGemachBySlug(slug)
   if (!gemach) notFound()
 
-  const relatedRaw = await getGemachsByLocation(gemach.location)
-  const related = relatedRaw.filter((g) => g.id !== gemach.id).slice(0, 6)
+  const townList = await getGemachsByLocation(gemach.location)
+  const related = townList.filter((g) => g.id !== gemach.id).slice(0, 6)
+  const { prev, next } = getSiblings(gemach, townList)
+  const isPopular = (gemach.used_count ?? 0) >= 5
 
   const emoji = getCategoryEmoji(gemach.category)
   const accentColor = CATEGORY_ACCENT_COLORS[gemach.category] || '#64748B'
   const hasContact = gemach.contact_phone || gemach.contact_email || gemach.contact_website
   const url = `${siteUrl()}/g/${slug}`
+  const townSlug = townToSlug(gemach.location)
 
   const jsonLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
@@ -97,7 +101,20 @@ export default async function GemachPage({
     priceRange: 'Free',
   }
 
-  const townSlug = townToSlug(gemach.location)
+  const breadcrumbLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Directory', item: siteUrl() },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: gemach.location,
+        item: `${siteUrl()}/town/${townSlug}`,
+      },
+      { '@type': 'ListItem', position: 3, name: gemach.name, item: url },
+    ],
+  }
 
   return (
     <>
@@ -105,9 +122,13 @@ export default async function GemachPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
 
-      <section className="max-w-3xl mx-auto px-4 sm:px-6 pt-6">
-        <nav className="flex items-center gap-1.5 text-xs text-slate-500 mb-4">
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 pt-5">
+        <nav className="flex items-center gap-1.5 text-xs text-slate-500">
           <Link href="/" className="hover:text-navy flex items-center gap-1">
             <ChevronLeft className="w-3.5 h-3.5" /> Directory
           </Link>
@@ -120,17 +141,43 @@ export default async function GemachPage({
         </nav>
       </section>
 
-      <article className="max-w-3xl mx-auto px-4 sm:px-6 pb-10">
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-          <div className="h-1" style={{ background: `linear-gradient(90deg, ${accentColor}, ${accentColor}55, transparent)` }} />
+      <article className="max-w-3xl mx-auto px-4 sm:px-6 pb-8 pt-4">
+        <div className="relative bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div
+            className="relative h-28 sm:h-36 flex items-center justify-center overflow-hidden"
+            style={{
+              background: `linear-gradient(135deg, ${accentColor} 0%, ${accentColor}dd 55%, ${accentColor}88 100%)`,
+            }}
+          >
+            <div
+              className="absolute inset-0 opacity-10"
+              style={{
+                backgroundImage:
+                  'radial-gradient(circle at 20% 30%, rgba(255,255,255,0.4), transparent 40%), radial-gradient(circle at 80% 70%, rgba(255,255,255,0.3), transparent 45%)',
+              }}
+            />
+            <span
+              className="relative text-[72px] sm:text-[96px] leading-none select-none"
+              style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))' }}
+              aria-hidden="true"
+            >
+              {emoji}
+            </span>
+            {isPopular && (
+              <div className="absolute top-3 right-3 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-white/90 backdrop-blur text-[10px] font-bold uppercase tracking-wider text-amber-700 shadow-sm">
+                <TrendingUp className="w-3 h-3" />
+                Community favorite
+              </div>
+            )}
+          </div>
 
           <div className="p-5 sm:p-7">
-            <div className="flex items-start justify-between gap-3 flex-wrap">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
               <span
                 className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold"
                 style={{ backgroundColor: `${accentColor}12`, color: accentColor }}
               >
-                <span className="text-sm">{emoji}</span> {gemach.category}
+                {gemach.category}
               </span>
               <OpenNowBadge hours={gemach.hours} />
             </div>
@@ -161,37 +208,32 @@ export default async function GemachPage({
             {hasContact ? (
               <div className="mt-6 space-y-2">
                 {gemach.contact_phone && (
-                  <a
-                    href={`tel:${gemach.contact_phone.replace(/[^+\d]/g, '')}`}
-                    className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors"
-                  >
-                    <div className="w-9 h-9 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
-                      <Phone className="w-4 h-4" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-[10px] text-emerald-500 font-semibold uppercase tracking-wider">Call</div>
-                      <div className="text-sm font-medium truncate">{gemach.contact_phone}</div>
-                    </div>
-                    <ArrowUpRight className="w-4 h-4 opacity-30" />
-                  </a>
-                )}
-
-                {gemach.contact_phone && (
-                  <a
-                    href={`sms:${gemach.contact_phone.replace(/[^+\d]/g, '')}`}
-                    className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 transition-colors"
-                  >
-                    <div className="w-9 h-9 rounded-lg bg-sky-100 flex items-center justify-center shrink-0">
-                      <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                      </svg>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="text-[10px] text-sky-500 font-semibold uppercase tracking-wider">Text</div>
-                      <div className="text-sm font-medium truncate">{gemach.contact_phone}</div>
-                    </div>
-                    <ArrowUpRight className="w-4 h-4 opacity-30" />
-                  </a>
+                  <div className="grid grid-cols-2 gap-2">
+                    <a
+                      href={`tel:${gemach.contact_phone.replace(/[^+\d]/g, '')}`}
+                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors min-w-0"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
+                        <Phone className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[10px] text-emerald-500 font-semibold uppercase tracking-wider">Call</div>
+                        <div className="text-xs font-medium truncate">{gemach.contact_phone}</div>
+                      </div>
+                    </a>
+                    <a
+                      href={`sms:${gemach.contact_phone.replace(/[^+\d]/g, '')}`}
+                      className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 transition-colors min-w-0"
+                    >
+                      <div className="w-8 h-8 rounded-lg bg-sky-100 flex items-center justify-center shrink-0">
+                        <MessageSquare className="w-3.5 h-3.5" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[10px] text-sky-500 font-semibold uppercase tracking-wider">Text</div>
+                        <div className="text-xs font-medium truncate">{gemach.contact_phone}</div>
+                      </div>
+                    </a>
+                  </div>
                 )}
 
                 {gemach.contact_email && (
@@ -291,11 +333,54 @@ export default async function GemachPage({
           </div>
         </div>
 
+        {(prev || next) && (
+          <div className="grid grid-cols-2 gap-2 mt-4">
+            {prev ? (
+              <Link
+                href={`/g/${prev.slug}`}
+                prefetch={false}
+                className="flex items-center gap-2 p-3 rounded-xl bg-white border border-slate-200 hover:border-navy/40 hover:shadow-sm transition-all min-w-0"
+              >
+                <ChevronLeft className="w-4 h-4 text-slate-400 shrink-0" />
+                <div className="min-w-0">
+                  <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Previous</div>
+                  <div className="text-sm font-medium text-slate-700 truncate">{prev.name}</div>
+                </div>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {next ? (
+              <Link
+                href={`/g/${next.slug}`}
+                prefetch={false}
+                className="flex items-center gap-2 p-3 rounded-xl bg-white border border-slate-200 hover:border-navy/40 hover:shadow-sm transition-all min-w-0 text-right ml-auto w-full"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Next</div>
+                  <div className="text-sm font-medium text-slate-700 truncate">{next.name}</div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+              </Link>
+            ) : (
+              <span />
+            )}
+          </div>
+        )}
+
         {related.length > 0 && (
           <div className="mt-10">
-            <h2 className="font-heading text-lg font-bold text-slate-800 mb-3">
-              More in {gemach.location}
-            </h2>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-heading text-lg font-bold text-slate-800">
+                More in {gemach.location}
+              </h2>
+              <Link
+                href={`/town/${townSlug}`}
+                className="text-xs font-semibold text-navy hover:underline"
+              >
+                See all
+              </Link>
+            </div>
             <div className="grid gap-2 sm:grid-cols-2">
               {related.map((g) => (
                 <Link
@@ -320,7 +405,7 @@ export default async function GemachPage({
         )}
       </article>
 
-      <Footer gemachCount={relatedRaw.length > 0 ? relatedRaw.length : 107} />
+      <Footer gemachCount={townList.length} />
     </>
   )
 }

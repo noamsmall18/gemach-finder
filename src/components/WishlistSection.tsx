@@ -1,14 +1,17 @@
 'use client'
 
-import { useEffect, useState, useCallback, useMemo } from 'react'
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowUpDown, TrendingUp } from 'lucide-react'
 import WishlistCard from './WishlistCard'
 import WishlistRequestForm from './WishlistRequestForm'
-import { fetchWishlistItems, voteForItem, unvoteForItem, getOrCreateFingerprint, getVotedIds, addVotedId, removeVotedId } from '@/lib/wishlist'
+import { fetchWishlistItems, getOrCreateFingerprint, getVotedIds, addVotedId, removeVotedId } from '@/lib/wishlist'
+import { voteAction, unvoteAction } from '@/app/requests/actions'
 import type { WishlistItem } from '@/lib/types'
 
 type SortMode = 'votes' | 'newest'
+
+const VOTE_COOLDOWN_MS = 600
 
 export default function WishlistSection() {
   const [items, setItems] = useState<WishlistItem[]>([])
@@ -16,10 +19,13 @@ export default function WishlistSection() {
   const [fingerprint, setFingerprint] = useState('')
   const [loading, setLoading] = useState(true)
   const [sortMode, setSortMode] = useState<SortMode>('votes')
+  const lastVoteAtRef = useRef<Map<string, number>>(new Map())
 
   useEffect(() => {
-    setFingerprint(getOrCreateFingerprint())
-    setVotedIds(getVotedIds())
+    queueMicrotask(() => {
+      setFingerprint(getOrCreateFingerprint())
+      setVotedIds(getVotedIds())
+    })
     fetchWishlistItems().then((data) => {
       setItems(data)
       setLoading(false)
@@ -27,6 +33,11 @@ export default function WishlistSection() {
   }, [])
 
   const handleToggleVote = useCallback(async (id: string) => {
+    const now = Date.now()
+    const last = lastVoteAtRef.current.get(id) || 0
+    if (now - last < VOTE_COOLDOWN_MS) return
+    lastVoteAtRef.current.set(id, now)
+
     const alreadyVoted = votedIds.has(id)
 
     if (alreadyVoted) {
@@ -40,8 +51,8 @@ export default function WishlistSection() {
       })
       removeVotedId(id)
 
-      const success = await unvoteForItem(id, fingerprint)
-      if (!success) {
+      const result = await unvoteAction(id, fingerprint)
+      if (!result.ok) {
         setItems(prev => prev.map(item =>
           item.id === id ? { ...item, vote_count: item.vote_count + 1 } : item
         ))
@@ -55,8 +66,8 @@ export default function WishlistSection() {
       setVotedIds(prev => new Set([...prev, id]))
       addVotedId(id)
 
-      const success = await voteForItem(id, fingerprint)
-      if (!success) {
+      const result = await voteAction(id, fingerprint)
+      if (!result.ok) {
         setItems(prev => prev.map(item =>
           item.id === id ? { ...item, vote_count: item.vote_count - 1 } : item
         ))

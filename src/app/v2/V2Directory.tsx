@@ -9,17 +9,16 @@ import {
   AlertCircle, ChevronRight, Share2, Check, User, Clock, FileText, ArrowUpRight, BadgeCheck
 } from 'lucide-react'
 import type { Gemach } from '@/lib/types'
-import { CATEGORIES, LOCATIONS, CATEGORY_ACCENT_COLORS, getCategoryEmoji, getCategoryColors } from '@/lib/constants'
+import { CATEGORIES, LOCATIONS, CATEGORY_ACCENT_COLORS, getCategoryEmoji } from '@/lib/constants'
 import { searchGemachs, getSuggestions } from '@/lib/search'
 
 /* ─── Animated Counter ─── */
 function AnimatedCounter({ target, duration = 1200 }: { target: number; duration?: number }) {
   const [count, setCount] = useState(target)
-  const [hasAnimated, setHasAnimated] = useState(false)
+  const startedRef = useRef(false)
   useEffect(() => {
-    if (target === 0 || hasAnimated) return
-    setHasAnimated(true)
-    setCount(0)
+    if (target === 0 || startedRef.current) return
+    startedRef.current = true
     const startTime = performance.now()
     const step = (currentTime: number) => {
       const elapsed = currentTime - startTime
@@ -29,7 +28,7 @@ function AnimatedCounter({ target, duration = 1200 }: { target: number; duration
       if (progress < 1) requestAnimationFrame(step)
     }
     requestAnimationFrame(step)
-  }, [target, duration, hasAnimated])
+  }, [target, duration])
   return <>{count}</>
 }
 
@@ -79,7 +78,6 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
   const [selectedGemach, setSelectedGemach] = useState<Gemach | null>(null)
   const [copied, setCopied] = useState(false)
   const [searchFocused, setSearchFocused] = useState(false)
-  const [showSuggestions, setShowSuggestions] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const searchContainerRef = useRef<HTMLDivElement>(null)
 
@@ -87,7 +85,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (searchContainerRef.current && !searchContainerRef.current.contains(e.target as Node)) {
-        setShowSuggestions(false)
+        setSearchFocused(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -103,9 +101,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
 
   const suggestions = useMemo(() => getSuggestions(gemachs, search), [gemachs, search])
 
-  useEffect(() => {
-    setShowSuggestions(searchFocused && suggestions.length > 0 && search.length >= 2)
-  }, [searchFocused, suggestions, search])
+  const showSuggestions = searchFocused && suggestions.length > 0 && search.length >= 2
 
   const filtered = useMemo(() => {
     let results = search ? searchGemachs(gemachs, search) : gemachs
@@ -267,7 +263,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                         className="absolute top-full left-0 right-0 mt-1 bg-[#1A1F2E] rounded-xl border border-white/[0.08] shadow-lg z-20 overflow-hidden">
                         {suggestions.map(suggestion => (
                           <button key={suggestion}
-                            onMouseDown={e => { e.preventDefault(); setSearch(suggestion); setShowSuggestions(false) }}
+                            onMouseDown={e => { e.preventDefault(); setSearch(suggestion); setSearchFocused(false) }}
                             className="w-full px-4 py-2.5 text-left text-sm text-white/60 hover:bg-white/[0.05] hover:text-sea-light transition-colors flex items-center gap-2">
                             <Search className="w-3 h-3 text-white/20 shrink-0" />
                             {suggestion}
@@ -488,6 +484,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                 <h4 className="text-xs font-semibold text-white/30 uppercase tracking-wider mb-3">Navigate</h4>
                 <div className="flex flex-col gap-2">
                   <Link href="/v2" className="text-sm hover:text-white/80 transition-colors">Directory</Link>
+                  <Link href="/v2/map" className="text-sm hover:text-white/80 transition-colors">Map</Link>
                   <Link href="/requests" className="text-sm hover:text-white/80 transition-colors">Create</Link>
                   <Link href="/suggest" className="text-sm hover:text-white/80 transition-colors">Missing One?</Link>
                 </div>
@@ -496,7 +493,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                 <h4 className="text-xs font-semibold text-white/30 uppercase tracking-wider mb-3">Info</h4>
                 <div className="flex flex-col gap-2">
                   <span className="text-sm">{gemachs.length} gemachs</span>
-                  <span className="text-sm">7 categories</span>
+                  <span className="text-sm">{CATEGORIES.length} categories</span>
                   <span className="text-sm">100% free</span>
                 </div>
               </div>
@@ -548,10 +545,11 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                           </svg>
                         </button>
                         <button onClick={handleShare}
-                          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/[0.06] transition-colors" title="Share">
+                          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/[0.06] transition-colors" title="Share" aria-label={copied ? 'Copied to clipboard' : 'Share gemach'}>
                           {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Share2 className="w-4 h-4 text-white/30" />}
                         </button>
                         <button onClick={() => setSelectedGemach(null)}
+                          aria-label="Close"
                           className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/[0.06] transition-colors">
                           <X className="w-4 h-4 text-white/30" />
                         </button>

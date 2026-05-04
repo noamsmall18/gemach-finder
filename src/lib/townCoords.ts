@@ -11,7 +11,6 @@ export const TOWN_COORDS: Record<string, [number, number]> = {
   'Bergen County-wide': [40.9595, -74.0738],
   'Teaneck & Bergenfield': [40.9126, -74.0068],
   'Spring Valley, NY': [41.1134, -74.0443],
-  'Monsey, NY': [41.1126, -74.0685],
 }
 
 export function coordsFor(location: string): [number, number] | null {

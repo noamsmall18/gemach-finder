@@ -13,10 +13,11 @@ import type { Gemach } from '@/lib/types'
 
 interface GemachDirectoryProps {
   gemachs: Gemach[]
+  initialSearch?: string
 }
 
-export default function GemachDirectory({ gemachs }: GemachDirectoryProps) {
-  const [search, setSearch] = useState('')
+export default function GemachDirectory({ gemachs, initialSearch = '' }: GemachDirectoryProps) {
+  const [search, setSearch] = useState(initialSearch)
   const [category, setCategory] = useState<string | null>(null)
   const [location, setLocation] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<'popular' | 'name' | 'category' | 'location'>('popular')

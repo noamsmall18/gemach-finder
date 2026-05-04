@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ChevronUp, Trophy } from 'lucide-react'
+import { ChevronUp } from 'lucide-react'
 import type { WishlistItem } from '@/lib/types'
 import { getCategoryEmoji, CATEGORY_ACCENT_COLORS } from '@/lib/constants'
 

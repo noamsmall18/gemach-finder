@@ -12,6 +12,17 @@ const GemachMap = dynamic(() => import('./GemachMap'), {
   ),
 })
 
-export default function GemachMapShell({ gemachs }: { gemachs: Gemach[] }) {
-  return <GemachMap gemachs={gemachs} />
+export default function GemachMapShell({
+  gemachs,
+  theme = 'light',
+}: {
+  gemachs: Gemach[]
+  theme?: 'light' | 'dark'
+}) {
+  return (
+    <GemachMap
+      gemachs={gemachs}
+      theme={theme}
+    />
+  )
 }

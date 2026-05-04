@@ -92,8 +92,8 @@ function parseTimeRange(raw: string): { start: number; end: number } | null {
   const rawStart = match[1].trim()
   const rawEnd = match[2].trim()
 
-  let start = parseTime(rawStart)
-  let end = parseTime(rawEnd)
+  const start = parseTime(rawStart)
+  const end = parseTime(rawEnd)
 
   // If start has no am/pm but end does, infer from end
   if (start !== null && end !== null) {

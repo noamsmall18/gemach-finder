@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { isOpenNow, parseHours } from '@/lib/hours'
 
 interface OpenNowBadgeProps {
@@ -9,21 +9,22 @@ interface OpenNowBadgeProps {
 }
 
 export default function OpenNowBadge({ hours, size = 'xs' }: OpenNowBadgeProps) {
+  const parseable = useMemo(() => parseHours(hours) !== null, [hours])
   const [open, setOpen] = useState<boolean | null>(null)
 
   useEffect(() => {
     // Only compute on the client so SSR markup stays consistent with all locales/timezones
-    if (!parseHours(hours)) {
-      setOpen(null)
-      return
-    }
+    if (!parseable) return
     const tick = () => setOpen(isOpenNow(hours))
-    tick()
+    const rafId = requestAnimationFrame(tick)
     const id = setInterval(tick, 60_000)
-    return () => clearInterval(id)
-  }, [hours])
+    return () => {
+      cancelAnimationFrame(rafId)
+      clearInterval(id)
+    }
+  }, [parseable, hours])
 
-  if (open === null) return null
+  if (!parseable || open === null) return null
 
   const textClass = size === 'sm' ? 'text-[11px]' : 'text-[10px]'
 

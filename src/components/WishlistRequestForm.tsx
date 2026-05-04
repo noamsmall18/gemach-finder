@@ -1,11 +1,17 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Plus, ChevronDown, Check } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
+import { Plus, Check } from 'lucide-react'
 import { CATEGORIES } from '@/lib/constants'
-import { submitWishlistItem, getOrCreateFingerprint, addVotedId } from '@/lib/wishlist'
+import { getOrCreateFingerprint, addVotedId } from '@/lib/wishlist'
+import { submitWishlistAction } from '@/app/requests/actions'
 import type { WishlistItem } from '@/lib/types'
+
+const MIN_FORM_TIME_MS = 1500
+const MAX_NAME = 120
+const MAX_DESCRIPTION = 500
+const MAX_SUBMITTER = 120
 
 interface WishlistRequestFormProps {
   onItemAdded: (item: WishlistItem) => void
@@ -19,13 +25,33 @@ export default function WishlistRequestForm({ onItemAdded }: WishlistRequestForm
     description: '',
     requested_by: '',
   })
+  const [honeypot, setHoneypot] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  const expandedAtRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    if (expanded) expandedAtRef.current = Date.now()
+  }, [expanded])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+
+    if (honeypot) {
+      setSuccess(true)
+      setTimeout(() => {
+        setSuccess(false)
+        setExpanded(false)
+      }, 2000)
+      return
+    }
+
+    if (expandedAtRef.current && Date.now() - expandedAtRef.current < MIN_FORM_TIME_MS) {
+      setError('Please take a moment to fill in the details.')
+      return
+    }
 
     if (!form.name || !form.category) {
       setError('Please provide a name and category.')
@@ -34,30 +60,31 @@ export default function WishlistRequestForm({ onItemAdded }: WishlistRequestForm
 
     setSubmitting(true)
 
-    const item = await submitWishlistItem({
+    const fingerprint = getOrCreateFingerprint()
+    const result = await submitWishlistAction({
       name: form.name,
       category: form.category,
       description: form.description || undefined,
       requested_by: form.requested_by || undefined,
-    })
-
-    if (!item) {
-      setError('Something went wrong. Please try again.')
-      setSubmitting(false)
-      return
-    }
-
-    const fp = getOrCreateFingerprint()
-    addVotedId(item.id)
-    const { supabase } = await import('@/lib/supabase')
-    await supabase.from('wishlist_votes').insert({
-      wishlist_item_id: item.id,
-      voter_fingerprint: fp,
+      fingerprint,
     })
 
     setSubmitting(false)
+
+    if (!result.ok) {
+      if (result.error === 'rate_limited') {
+        setError('You\'ve submitted a few requests recently. Please try again in an hour.')
+      } else if (result.error === 'invalid') {
+        setError('Please provide a name and category.')
+      } else {
+        setError('Something went wrong. Please try again.')
+      }
+      return
+    }
+
+    addVotedId(result.item.id)
     setSuccess(true)
-    onItemAdded(item)
+    onItemAdded(result.item)
 
     setTimeout(() => {
       setSuccess(false)
@@ -96,8 +123,21 @@ export default function WishlistRequestForm({ onItemAdded }: WishlistRequestForm
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: 'auto' }}
       onSubmit={handleSubmit}
-      className="space-y-3"
+      className="relative space-y-3"
     >
+      {/* Honeypot */}
+      <div aria-hidden="true" className="absolute left-[-9999px] top-auto w-px h-px overflow-hidden">
+        <label>
+          Website
+          <input
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+          />
+        </label>
+      </div>
       <div className="flex items-center justify-between mb-1">
         <span className="text-sm font-bold text-slate-700">New Request</span>
         <button
@@ -113,6 +153,7 @@ export default function WishlistRequestForm({ onItemAdded }: WishlistRequestForm
         <input
           type="text"
           value={form.name}
+          maxLength={MAX_NAME}
           onChange={(e) => setForm({ ...form, name: e.target.value })}
           className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200/80 bg-white outline-none focus:border-navy focus:ring-2 focus:ring-navy/5 transition-all text-sm"
           placeholder="What gemach should exist?"
@@ -136,6 +177,7 @@ export default function WishlistRequestForm({ onItemAdded }: WishlistRequestForm
         <input
           type="text"
           value={form.description}
+          maxLength={MAX_DESCRIPTION}
           onChange={(e) => setForm({ ...form, description: e.target.value })}
           className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200/80 bg-white outline-none focus:border-navy focus:ring-2 focus:ring-navy/5 transition-all text-sm"
           placeholder="Why is this needed? (optional)"
@@ -143,6 +185,7 @@ export default function WishlistRequestForm({ onItemAdded }: WishlistRequestForm
         <input
           type="text"
           value={form.requested_by}
+          maxLength={MAX_SUBMITTER}
           onChange={(e) => setForm({ ...form, requested_by: e.target.value })}
           className="w-full px-3.5 py-2.5 rounded-lg border border-slate-200/80 bg-white outline-none focus:border-navy focus:ring-2 focus:ring-navy/5 transition-all text-sm"
           placeholder="Your name (optional)"

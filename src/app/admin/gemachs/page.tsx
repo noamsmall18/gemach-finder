@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js'
 import { adminLogout, isAdmin, toggleOperatorConfirmed } from '../actions'
 import type { Gemach } from '@/lib/types'
 import { getCategoryEmoji } from '@/lib/constants'
-import { BadgeCheck } from 'lucide-react'
+import { BadgeCheck, ExternalLink, TrendingUp, AlertTriangle } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -135,6 +135,18 @@ export default async function AdminGemachsPage({
                   {g.operator_confirmed && (
                     <BadgeCheck className="w-4 h-4 text-sky-500 shrink-0" strokeWidth={2.25} />
                   )}
+                  {(g.used_count ?? 0) > 0 && (
+                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-700 text-[10px] font-semibold tabular-nums">
+                      <TrendingUp className="w-3 h-3" strokeWidth={2.25} />
+                      {g.used_count}
+                    </span>
+                  )}
+                  {(g.report_count ?? 0) > 0 && (
+                    <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-md bg-rose-50 text-rose-700 text-[10px] font-semibold tabular-nums">
+                      <AlertTriangle className="w-3 h-3" strokeWidth={2.25} />
+                      {g.report_count}
+                    </span>
+                  )}
                 </div>
                 <div className="text-xs text-slate-500 mt-0.5 flex items-center gap-1.5 flex-wrap">
                   <span>{getCategoryEmoji(g.category)} {g.category}</span>
@@ -149,18 +161,32 @@ export default async function AdminGemachsPage({
                 </div>
               </div>
 
-              <form action={toggleAction.bind(null, g.id, !g.operator_confirmed)}>
-                <button
-                  type="submit"
-                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors shrink-0 ${
-                    g.operator_confirmed
-                      ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      : 'bg-sky-500 text-white hover:bg-sky-600'
-                  }`}
-                >
-                  {g.operator_confirmed ? 'Remove checkmark' : 'Mark confirmed'}
-                </button>
-              </form>
+              <div className="flex items-center gap-2 shrink-0">
+                {g.slug && (
+                  <a
+                    href={`/g/${g.slug}`}
+                    target="_blank"
+                    rel="noopener"
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-navy hover:bg-slate-100 transition-colors"
+                    aria-label={`Open public page for ${g.name}`}
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    View
+                  </a>
+                )}
+                <form action={toggleAction.bind(null, g.id, !g.operator_confirmed)}>
+                  <button
+                    type="submit"
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
+                      g.operator_confirmed
+                        ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        : 'bg-sky-500 text-white hover:bg-sky-600'
+                    }`}
+                  >
+                    {g.operator_confirmed ? 'Remove checkmark' : 'Mark confirmed'}
+                  </button>
+                </form>
+              </div>
             </div>
           ))}
         </div>

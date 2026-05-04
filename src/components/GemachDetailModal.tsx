@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useId, useRef, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X, Phone, Mail, Globe, MapPin, Clock, User, FileText, AlertCircle, ArrowUpRight, Share2, Check, BadgeCheck, MessageSquare, ExternalLink } from 'lucide-react'
@@ -14,6 +14,10 @@ interface GemachDetailModalProps {
 
 export default function GemachDetailModal({ gemach, onClose }: GemachDetailModalProps) {
   const [copied, setCopied] = useState(false)
+  const titleId = useId()
+  const cardRef = useRef<HTMLDivElement>(null)
+  const closeBtnRef = useRef<HTMLButtonElement>(null)
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null)
 
   const handleShare = useCallback(async () => {
     if (!gemach) return
@@ -49,17 +53,41 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
   useEffect(() => {
     if (gemach) {
       document.body.style.overflow = 'hidden'
-      return () => { document.body.style.overflow = '' }
+      previouslyFocusedRef.current = document.activeElement as HTMLElement | null
+      requestAnimationFrame(() => closeBtnRef.current?.focus())
+      return () => {
+        document.body.style.overflow = ''
+        previouslyFocusedRef.current?.focus?.()
+      }
     }
   }, [gemach])
 
   useEffect(() => {
+    if (!gemach) return
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') {
+        onClose()
+        return
+      }
+      if (e.key !== 'Tab' || !cardRef.current) return
+      const focusable = cardRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+      if (focusable.length === 0) return
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      const active = document.activeElement as HTMLElement | null
+      if (e.shiftKey && active === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault()
+        first.focus()
+      }
     }
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
-  }, [onClose])
+  }, [gemach, onClose])
 
   const emoji = gemach ? getCategoryEmoji(gemach.category) : ''
   const accentColor = gemach ? (CATEGORY_ACCENT_COLORS[gemach.category] || '#64748B') : '#64748B'
@@ -93,6 +121,10 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
             >
               {/* Card - full height on mobile, centered on desktop */}
               <div
+                ref={cardRef}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={titleId}
                 className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:max-w-lg max-h-[92vh] sm:max-h-[85vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
               >
@@ -127,12 +159,15 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
                       onClick={handleShare}
                       className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 active:bg-slate-200 transition-colors"
                       title="Share"
+                      aria-label={copied ? 'Copied to clipboard' : 'Share gemach'}
                     >
                       {copied ? <Check className="w-4 h-4 text-sea" /> : <Share2 className="w-4 h-4 text-slate-400" />}
                     </button>
                     <button
+                      ref={closeBtnRef}
                       onClick={onClose}
                       className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 active:bg-slate-200 transition-colors"
+                      aria-label="Close"
                     >
                       <X className="w-4 h-4 text-slate-400" />
                     </button>
@@ -141,7 +176,7 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
 
                 {/* Content */}
                 <div className="px-4 sm:px-5 pb-8">
-                  <h2 className="font-heading text-lg sm:text-xl md:text-2xl font-bold text-slate-800 leading-tight">
+                  <h2 id={titleId} className="font-heading text-lg sm:text-xl md:text-2xl font-bold text-slate-800 leading-tight">
                     <span className="inline">{gemach.name}</span>
                     {gemach.operator_confirmed && (
                       <BadgeCheck
@@ -295,10 +330,21 @@ export default function GemachDetailModal({ gemach, onClose }: GemachDetailModal
                     <div className="mt-6 pt-5 border-t border-slate-100">
                       <Link
                         href={`/g/${gemach.slug}`}
-                        className="inline-flex items-center gap-1.5 text-sm font-semibold text-navy hover:text-navy/80 transition-colors"
+                        className="flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm font-semibold transition-all hover:shadow-md active:scale-[0.99]"
+                        style={{
+                          background: `linear-gradient(135deg, ${accentColor} 0%, ${accentColor}CC 100%)`,
+                          color: '#fff',
+                        }}
                       >
-                        View full page <ExternalLink className="w-3.5 h-3.5" />
+                        <span className="flex items-center gap-2">
+                          <span className="text-base not-italic">{emoji}</span>
+                          View full page
+                        </span>
+                        <ExternalLink className="w-4 h-4 opacity-80" />
                       </Link>
+                      <p className="text-[11px] text-slate-400 mt-2 leading-relaxed">
+                        Permalink, prev/next, and shareable URL for this gemach.
+                      </p>
                     </div>
                   )}
                 </div>

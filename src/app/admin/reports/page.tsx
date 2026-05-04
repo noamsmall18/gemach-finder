@@ -106,6 +106,7 @@ export default async function AdminReportsPage() {
                       <Link
                         href={`/g/${g.slug}`}
                         target="_blank"
+                        rel="noopener noreferrer"
                         className="text-xs text-navy hover:underline"
                       >
                         View

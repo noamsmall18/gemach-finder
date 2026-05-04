@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
+import { toDarkPath, toLightPath } from '@/lib/themeRoutes'
 
 function SunIcon() {
   return (
@@ -76,7 +77,9 @@ export default function ThemeToggle() {
   const [mounted, setMounted] = useState(false)
   const [clickEffect, setClickEffect] = useState(false)
 
-  useEffect(() => setMounted(true), [])
+  useEffect(() => {
+    queueMicrotask(() => setMounted(true))
+  }, [])
 
   // Always clear clickEffect after animation duration as a safety net
   useEffect(() => {
@@ -91,11 +94,9 @@ export default function ThemeToggle() {
 
     setTimeout(() => {
       if (isDark) {
-        localStorage.setItem('gemach-theme', 'light')
-        router.push(pathname === '/v2' ? '/' : pathname.replace('/v2', ''))
+        router.push(toLightPath(pathname) || '/')
       } else {
-        localStorage.setItem('gemach-theme', 'dark')
-        router.push(pathname === '/' ? '/v2' : `/v2${pathname}`)
+        router.push(toDarkPath(pathname) || '/v2')
       }
     }, 300)
   }, [isDark, pathname, router, clickEffect])

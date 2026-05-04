@@ -4,8 +4,8 @@ import Script from 'next/script'
 import ScrollNav from '@/components/ScrollNav'
 import RootNav from '@/components/RootNav'
 import BackToTop from '@/components/BackToTop'
-import ThemeRedirect from '@/components/ThemeRedirect'
 import PWAInstallPrompt from '@/components/PWAInstallPrompt'
+import { siteUrl } from '@/lib/data'
 import './globals.css'
 
 const lora = Lora({
@@ -20,11 +20,15 @@ const nunito = Nunito({
   display: 'swap',
 })
 
+const OG_IMAGE = `${siteUrl()}/og?title=${encodeURIComponent('GemachFinder')}&sub=${encodeURIComponent('Free community lending across NY & NJ')}`
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl()),
   title: 'GemachFinder - Gemach Directory for Bergen, Passaic & Rockland Counties',
   description:
-    'Find free community lending services in Teaneck, Bergenfield, Fair Lawn, Passaic, Monsey and beyond. Baby equipment, medical supplies, clothing, interest-free loans, and more.',
+    'Find free community lending services in Teaneck, Bergenfield, Fair Lawn, Passaic, Spring Valley, and beyond. Baby equipment, medical supplies, clothing, interest-free loans, and more.',
   manifest: '/manifest.json',
+  alternates: { canonical: siteUrl() },
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -34,13 +38,16 @@ export const metadata: Metadata = {
     title: 'GemachFinder - Gemach Directory for Bergen, Passaic & Rockland Counties',
     description:
       'Find free community lending services across Bergen County, Passaic County, and Rockland County. Baby gear, medical equipment, simcha supplies, interest-free loans, and more.',
+    url: siteUrl(),
     type: 'website',
     siteName: 'GemachFinder',
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: 'GemachFinder' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'GemachFinder - Gemach Directory for Bergen, Passaic & Rockland Counties',
     description: 'Find free community lending services across Bergen County, Passaic County, and Rockland County.',
+    images: [OG_IMAGE],
   },
 }
 
@@ -62,7 +69,6 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
         )}
-        <ThemeRedirect />
         <ScrollNav />
         <RootNav />
 

@@ -22,7 +22,6 @@ export const LOCATIONS = [
   'Bergen County-wide',
   'Teaneck & Bergenfield',
   'Spring Valley, NY',
-  'Monsey, NY',
 ] as const
 
 export const CATEGORY_COLORS: Record<string, { text: string; bg: string }> = {

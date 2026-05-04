@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
-import { createClient } from '@supabase/supabase-js'
 import GemachMapShell from '@/components/GemachMapShell'
 import Footer from '@/components/Footer'
-import type { Gemach } from '@/lib/types'
+import { getAllGemachs } from '@/lib/data'
 
 export const revalidate = 300
 
@@ -11,25 +10,8 @@ export const metadata: Metadata = {
   description: 'Browse verified gemachs on a map of Bergen, Passaic, and Rockland Counties.',
 }
 
-async function getGemachs(): Promise<Gemach[]> {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-  const { data, error } = await supabase
-    .from('gemachs')
-    .select('*')
-    .eq('verified', true)
-    .order('priority', { ascending: false })
-  if (error) {
-    console.error('Error fetching gemachs:', error)
-    return []
-  }
-  return data || []
-}
-
 export default async function MapPage() {
-  const gemachs = await getGemachs()
+  const gemachs = await getAllGemachs()
 
   return (
     <>
@@ -44,7 +26,7 @@ export default async function MapPage() {
 
       <section className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 pb-10">
         <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-100" style={{ height: 'min(75vh, 680px)' }}>
-          <GemachMapShell gemachs={gemachs} />
+          <GemachMapShell gemachs={gemachs} theme="light" />
         </div>
       </section>
 

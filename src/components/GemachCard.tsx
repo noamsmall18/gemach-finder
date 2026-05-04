@@ -1,9 +1,11 @@
 'use client'
 
+import { useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { Phone, Mail, Globe, MapPin, AlertCircle, ChevronRight, BadgeCheck } from 'lucide-react'
 import type { Gemach } from '@/lib/types'
-import { getCategoryEmoji, getCategoryColors, CATEGORY_ACCENT_COLORS } from '@/lib/constants'
+import { getCategoryEmoji, CATEGORY_ACCENT_COLORS } from '@/lib/constants'
 import OpenNowBadge from './OpenNowBadge'
 
 interface GemachCardProps {
@@ -13,10 +15,17 @@ interface GemachCardProps {
 }
 
 export default function GemachCard({ gemach, index, onSelect }: GemachCardProps) {
-  const colors = getCategoryColors(gemach.category)
   const emoji = getCategoryEmoji(gemach.category)
   const accentColor = CATEGORY_ACCENT_COLORS[gemach.category] || '#94A3B8'
   const hasContact = gemach.contact_phone || gemach.contact_email || gemach.contact_website
+
+  const router = useRouter()
+  const prefetchedRef = useRef(false)
+  const handlePrefetch = () => {
+    if (prefetchedRef.current || !gemach.slug) return
+    prefetchedRef.current = true
+    router.prefetch(`/g/${gemach.slug}`)
+  }
 
   return (
     <motion.div
@@ -25,6 +34,8 @@ export default function GemachCard({ gemach, index, onSelect }: GemachCardProps)
       transition={{ delay: index * 0.03, duration: 0.4, ease: [0.21, 0.47, 0.32, 0.98] }}
       whileHover={{ y: -2, transition: { duration: 0.2, ease: 'easeOut' } }}
       onClick={() => onSelect(gemach)}
+      onMouseEnter={handlePrefetch}
+      onFocus={handlePrefetch}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(gemach) }}}
       tabIndex={0}
       role="button"
