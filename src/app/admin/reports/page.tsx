@@ -28,9 +28,12 @@ interface GemachStub {
 }
 
 function serviceClient() {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return null
+  }
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
     { auth: { persistSession: false, autoRefreshToken: false } }
   )
 }
@@ -39,6 +42,7 @@ async function resolveReport(id: string) {
   'use server'
   if (!(await isAdmin())) redirect('/admin')
   const sc = serviceClient()
+  if (!sc) throw new Error('Supabase service role env vars are missing')
   await sc.from('gemach_reports').update({ resolved: true }).eq('id', id)
   revalidatePath('/admin/reports')
 }
@@ -47,6 +51,7 @@ async function deleteReport(id: string) {
   'use server'
   if (!(await isAdmin())) redirect('/admin')
   const sc = serviceClient()
+  if (!sc) throw new Error('Supabase service role env vars are missing')
   await sc.from('gemach_reports').delete().eq('id', id)
   revalidatePath('/admin/reports')
 }
@@ -54,6 +59,22 @@ async function deleteReport(id: string) {
 export default async function AdminReportsPage() {
   if (!(await isAdmin())) redirect('/admin')
   const sc = serviceClient()
+  if (!sc) {
+    return (
+      <div className="max-w-3xl mx-auto p-6 space-y-4">
+        <div className="flex items-center justify-between">
+          <h1 className="font-heading text-2xl font-bold text-navy">Reports</h1>
+          <Link href="/admin" className="text-sm text-slate-600 hover:text-navy">
+            Admin
+          </Link>
+        </div>
+        <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-sm text-amber-900">
+          Add <span className="font-mono">SUPABASE_SERVICE_ROLE_KEY</span> to{' '}
+          <span className="font-mono">.env.local</span> to review live reports from localhost.
+        </div>
+      </div>
+    )
+  }
   const { data: reports } = await sc
     .from('gemach_reports')
     .select('*')

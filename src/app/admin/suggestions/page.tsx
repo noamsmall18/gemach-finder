@@ -55,24 +55,24 @@ function serviceClient() {
   })
 }
 
-async function getSuggestions(): Promise<SuggestionRow[]> {
+async function getSuggestions(): Promise<{ rows: SuggestionRow[]; serviceConfigured: boolean }> {
   const supabase = serviceClient()
-  if (!supabase) return []
+  if (!supabase) return { rows: [], serviceConfigured: false }
   const { data, error } = await supabase
     .from('suggestions')
     .select('*')
     .order('created_at', { ascending: false })
   if (error) {
     console.error('Error fetching suggestions:', error)
-    return []
+    return { rows: [], serviceConfigured: true }
   }
-  return (data || []) as SuggestionRow[]
+  return { rows: (data || []) as SuggestionRow[], serviceConfigured: true }
 }
 
 export default async function AdminSuggestionsPage() {
   if (!(await isAdmin())) redirect('/admin')
 
-  const suggestions = await getSuggestions()
+  const { rows: suggestions, serviceConfigured } = await getSuggestions()
   const parsedRows = suggestions.map((row) => ({
     row,
     update: parseGemachUpdateRequest(row.description),
@@ -152,6 +152,13 @@ export default async function AdminSuggestionsPage() {
           </form>
         </div>
       </div>
+
+      {!serviceConfigured && (
+        <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          Add <span className="font-mono">SUPABASE_SERVICE_ROLE_KEY</span> to{' '}
+          <span className="font-mono">.env.local</span> to review live suggestions from localhost.
+        </div>
+      )}
 
       <section className="space-y-4">
         <div>

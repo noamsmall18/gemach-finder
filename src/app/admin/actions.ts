@@ -14,6 +14,7 @@ import { townToSlug } from '@/lib/data'
 
 const ADMIN_COOKIE = 'gemach_admin'
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7
+const LOCAL_SESSION_PREFIX = 'local:'
 
 function getServiceClient() {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -24,6 +25,14 @@ function getServiceClient() {
   return createClient(url, serviceKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   })
+}
+
+function hasServiceClientEnv(): boolean {
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY)
+}
+
+function localSessionToken(expected: string): string {
+  return `${LOCAL_SESSION_PREFIX}${createHash('sha256').update(`admin:${expected}`).digest('hex')}`
 }
 
 // Compares SHA-256 hashes of both strings so the comparison runs in constant
@@ -44,27 +53,34 @@ export async function adminLogin(formData: FormData) {
     redirect('/admin?error=1')
   }
 
-  const token = randomBytes(32).toString('hex')
-  const expiresAt = new Date(Date.now() + SESSION_TTL_SECONDS * 1000).toISOString()
-  const sc = getServiceClient()
-  const { error } = await sc.from('admin_sessions').insert({ token, expires_at: expiresAt })
-  if (error) throw error
+  let token = randomBytes(32).toString('hex')
+
+  if (hasServiceClientEnv()) {
+    const expiresAt = new Date(Date.now() + SESSION_TTL_SECONDS * 1000).toISOString()
+    const sc = getServiceClient()
+    const { error } = await sc.from('admin_sessions').insert({ token, expires_at: expiresAt })
+    if (error) throw error
+  } else if (process.env.NODE_ENV !== 'production') {
+    token = localSessionToken(expected)
+  } else {
+    throw new Error('Supabase service role env vars are missing')
+  }
 
   const store = await cookies()
   store.set(ADMIN_COOKIE, token, {
     httpOnly: true,
     sameSite: 'lax',
-    secure: true,
+    secure: process.env.NODE_ENV === 'production',
     path: '/',
     maxAge: SESSION_TTL_SECONDS,
   })
-  redirect('/admin/suggestions')
+  redirect('/admin')
 }
 
 export async function adminLogout() {
   const store = await cookies()
   const token = store.get(ADMIN_COOKIE)?.value
-  if (token) {
+  if (token && hasServiceClientEnv()) {
     const sc = getServiceClient()
     await sc.from('admin_sessions').delete().eq('token', token)
   }
@@ -76,6 +92,15 @@ export async function isAdmin(): Promise<boolean> {
   const store = await cookies()
   const token = store.get(ADMIN_COOKIE)?.value
   if (!token) return false
+  const expected = process.env.ADMIN_PASSWORD
+  if (
+    expected &&
+    process.env.NODE_ENV !== 'production' &&
+    !hasServiceClientEnv() &&
+    passwordMatches(token, localSessionToken(expected))
+  ) {
+    return true
+  }
   const sc = getServiceClient()
   const { data } = await sc
     .from('admin_sessions')
@@ -107,6 +132,26 @@ export async function toggleOperatorConfirmed(id: string, next: boolean) {
   revalidatePath('/v2')
 }
 
+export async function toggleGemachVerified(id: string, next: boolean) {
+  if (!(await isAdmin())) redirect('/admin')
+  const supabase = getServiceClient()
+
+  const { data: gemach, error: readError } = await supabase
+    .from('gemachs')
+    .select('slug, location')
+    .eq('id', id)
+    .maybeSingle()
+
+  if (readError) throw readError
+
+  const { error } = await supabase.from('gemachs').update({ verified: next }).eq('id', id)
+  if (error) throw error
+
+  revalidatePath('/admin')
+  revalidatePath('/admin/gemachs')
+  if (gemach) revalidateGemachPages(gemach.slug, gemach.location)
+}
+
 function revalidateGemachPages(slug: string | null, location: string) {
   revalidatePath('/')
   revalidatePath('/map')
@@ -114,6 +159,98 @@ function revalidateGemachPages(slug: string | null, location: string) {
   revalidatePath('/v2/map')
   revalidatePath(`/town/${townToSlug(location)}`)
   if (slug) revalidatePath(`/g/${slug}`)
+}
+
+function trimmedNullable(value: FormDataEntryValue | null): string | null {
+  const next = String(value || '').trim()
+  return next || null
+}
+
+function numericNullable(value: FormDataEntryValue | null): number | null {
+  const raw = String(value || '').trim()
+  if (!raw) return null
+  const next = Number(raw)
+  if (!Number.isFinite(next)) return null
+  return next
+}
+
+export async function updateGemach(id: string, formData: FormData) {
+  if (!(await isAdmin())) redirect('/admin')
+  const supabase = getServiceClient()
+
+  const { data: existing, error: readError } = await supabase
+    .from('gemachs')
+    .select('slug, location')
+    .eq('id', id)
+    .maybeSingle()
+
+  if (readError) throw readError
+  if (!existing) throw new Error('Gemach not found')
+
+  const name = String(formData.get('name') || '').trim()
+  const category = String(formData.get('category') || '').trim()
+  const description = String(formData.get('description') || '').trim()
+  const location = String(formData.get('location') || '').trim()
+
+  if (!name || !category || !description || !location) {
+    throw new Error('name, category, description, and location are required')
+  }
+
+  const priority = Number(String(formData.get('priority') || '0').trim())
+
+  const updates = {
+    name,
+    category,
+    description,
+    location,
+    contact_name: trimmedNullable(formData.get('contact_name')),
+    contact_phone: trimmedNullable(formData.get('contact_phone')),
+    contact_email: trimmedNullable(formData.get('contact_email')),
+    contact_website: trimmedNullable(formData.get('contact_website')),
+    address: trimmedNullable(formData.get('address')),
+    hours: trimmedNullable(formData.get('hours')),
+    notes: trimmedNullable(formData.get('notes')),
+    slug: trimmedNullable(formData.get('slug')),
+    photo_url: trimmedNullable(formData.get('photo_url')),
+    lat: numericNullable(formData.get('lat')),
+    lng: numericNullable(formData.get('lng')),
+    priority: Number.isFinite(priority) ? priority : 0,
+    verified: formData.get('verified') === 'on',
+    operator_confirmed: formData.get('operator_confirmed') === 'on',
+  }
+
+  const { data: updated, error } = await supabase
+    .from('gemachs')
+    .update(updates)
+    .eq('id', id)
+    .select('slug, location')
+    .maybeSingle()
+
+  if (error) throw error
+  if (!updated) throw new Error('Gemach update failed')
+
+  revalidatePath('/admin')
+  revalidatePath('/admin/gemachs')
+  revalidateGemachPages(existing.slug, existing.location)
+  revalidateGemachPages(updated.slug, updated.location)
+}
+
+export async function updateWishlistStatus(id: string, status: 'open' | 'fulfilled') {
+  if (!(await isAdmin())) redirect('/admin')
+  const supabase = getServiceClient()
+  const { error } = await supabase.from('wishlist_items').update({ status }).eq('id', id)
+  if (error) throw error
+  revalidatePath('/admin')
+  revalidatePath('/requests')
+}
+
+export async function deleteWishlistItem(id: string) {
+  if (!(await isAdmin())) redirect('/admin')
+  const supabase = getServiceClient()
+  const { error } = await supabase.from('wishlist_items').delete().eq('id', id)
+  if (error) throw error
+  revalidatePath('/admin')
+  revalidatePath('/requests')
 }
 
 export async function approveSuggestion(id: string, formData: FormData) {
