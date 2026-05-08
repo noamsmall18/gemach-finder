@@ -8,12 +8,14 @@ import {
   Eye,
   EyeOff,
   ExternalLink,
+  PlusCircle,
   Save,
   Search,
   TrendingUp,
 } from 'lucide-react'
 import {
   adminLogout,
+  createGemach,
   isAdmin,
   toggleGemachVerified,
   toggleOperatorConfirmed,
@@ -180,6 +182,143 @@ export default async function AdminGemachsPage({
           <span className="font-mono">.env.local</span> to edit live gemach listings from localhost.
         </div>
       )}
+
+      <details id="create-listing" className="rounded-lg border border-slate-200 bg-white shadow-sm">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 hover:bg-slate-50">
+          <div>
+            <h2 className="font-heading text-lg font-bold text-navy">Create listing</h2>
+            <p className="mt-0.5 text-sm text-slate-500">Add a gemach directly from admin.</p>
+          </div>
+          <span className="inline-flex items-center gap-1.5 rounded-lg bg-navy px-3 py-2 text-xs font-bold text-white">
+            <PlusCircle className="h-3.5 w-3.5" />
+            New
+          </span>
+        </summary>
+
+        <form action={createGemach} className="space-y-4 border-t border-slate-200 bg-slate-50/60 p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <label className="text-xs font-semibold text-slate-500">
+              Name
+              <input name="name" required className={inputClass()} />
+            </label>
+            <label className="text-xs font-semibold text-slate-500">
+              Slug
+              <input name="slug" placeholder="Auto-generated when blank" className={inputClass()} />
+            </label>
+            <label className="text-xs font-semibold text-slate-500">
+              Category
+              <select name="category" required defaultValue="" className={inputClass('bg-white')}>
+                <option value="" disabled>
+                  Pick category
+                </option>
+                {CATEGORIES.map((category) => (
+                  <option key={category.name} value={category.name}>
+                    {category.emoji} {category.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="text-xs font-semibold text-slate-500">
+              Location
+              <select name="location" required defaultValue="" className={inputClass('bg-white')}>
+                <option value="" disabled>
+                  Pick town
+                </option>
+                {LOCATIONS.map((location) => (
+                  <option key={location} value={location}>
+                    {location}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <label className="block text-xs font-semibold text-slate-500">
+            Description
+            <textarea name="description" required rows={3} className={inputClass('resize-y')} />
+          </label>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <label className="text-xs font-semibold text-slate-500">
+              Contact name
+              <input name="contact_name" className={inputClass()} />
+            </label>
+            <label className="text-xs font-semibold text-slate-500">
+              Phone
+              <input name="contact_phone" className={inputClass()} />
+            </label>
+            <label className="text-xs font-semibold text-slate-500">
+              Email
+              <input name="contact_email" type="email" className={inputClass()} />
+            </label>
+            <label className="text-xs font-semibold text-slate-500">
+              Website
+              <input name="contact_website" type="url" className={inputClass()} />
+            </label>
+            <label className="text-xs font-semibold text-slate-500">
+              Hours
+              <input name="hours" className={inputClass()} />
+            </label>
+            <label className="text-xs font-semibold text-slate-500">
+              Address
+              <input name="address" className={inputClass()} />
+            </label>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_9rem_9rem_7rem] gap-3">
+            <label className="text-xs font-semibold text-slate-500">
+              Photo URL
+              <input name="photo_url" type="url" className={inputClass()} />
+            </label>
+            <label className="text-xs font-semibold text-slate-500">
+              Latitude
+              <input name="lat" inputMode="decimal" className={inputClass()} />
+            </label>
+            <label className="text-xs font-semibold text-slate-500">
+              Longitude
+              <input name="lng" inputMode="decimal" className={inputClass()} />
+            </label>
+            <label className="text-xs font-semibold text-slate-500">
+              Priority
+              <input name="priority" type="number" defaultValue={0} className={inputClass()} />
+            </label>
+          </div>
+
+          <label className="block text-xs font-semibold text-slate-500">
+            Notes
+            <textarea name="notes" rows={3} className={inputClass('resize-y')} />
+          </label>
+
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-2">
+            <div className="flex flex-wrap gap-4">
+              <label className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <input
+                  type="checkbox"
+                  name="verified"
+                  defaultChecked
+                  className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                />
+                Published in community
+              </label>
+              <label className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <input
+                  type="checkbox"
+                  name="operator_confirmed"
+                  className="rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+                />
+                Operator-confirmed
+              </label>
+            </div>
+            <button
+              type="submit"
+              className="inline-flex items-center gap-2 rounded-lg bg-navy px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-navy-deep"
+            >
+              <PlusCircle className="h-4 w-4" />
+              Create listing
+            </button>
+          </div>
+        </form>
+      </details>
 
       {filtered.length === 0 ? (
         <div className="text-center py-16 text-slate-400 rounded-lg border border-slate-200 bg-white">

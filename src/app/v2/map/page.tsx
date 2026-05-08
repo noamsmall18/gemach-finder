@@ -6,7 +6,7 @@ export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Map (Dark) - GemachFinder',
-  description: 'Browse verified gemachs on the dark-mode map for Bergen, Passaic, and Rockland Counties.',
+  description: 'Browse verified gemachs on the dark-mode map for Bergen County and nearby communities.',
 }
 
 export default async function V2MapPage() {

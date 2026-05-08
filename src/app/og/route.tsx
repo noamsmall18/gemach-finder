@@ -107,7 +107,7 @@ export async function GET(req: Request) {
           }}
         >
           <div style={{ width: 8, height: 8, borderRadius: 99, background: '#0ea5e9' }} />
-          Bergen · Passaic · Rockland
+          Bergen County
         </div>
       </div>
     ),

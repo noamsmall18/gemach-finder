@@ -20,13 +20,13 @@ const nunito = Nunito({
   display: 'swap',
 })
 
-const OG_IMAGE = `${siteUrl()}/og?title=${encodeURIComponent('GemachFinder')}&sub=${encodeURIComponent('Free community lending across NY & NJ')}`
+const OG_IMAGE = `${siteUrl()}/og?title=${encodeURIComponent('GemachFinder')}&sub=${encodeURIComponent('Free community lending around Bergen County')}`
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
-  title: 'GemachFinder - Gemach Directory for Bergen, Passaic & Rockland Counties',
+  title: 'GemachFinder - Gemach Directory for Bergen County',
   description:
-    'Find free community lending services in Teaneck, Bergenfield, Fair Lawn, Passaic, Spring Valley, and beyond. Baby equipment, medical supplies, clothing, interest-free loans, and more.',
+    'Find free community lending services in Teaneck, Bergenfield, Fair Lawn, and nearby communities. Baby equipment, medical supplies, clothing, interest-free loans, and more.',
   manifest: '/manifest.json',
   alternates: { canonical: siteUrl() },
   appleWebApp: {
@@ -35,9 +35,9 @@ export const metadata: Metadata = {
     title: 'GemachFinder',
   },
   openGraph: {
-    title: 'GemachFinder - Gemach Directory for Bergen, Passaic & Rockland Counties',
+    title: 'GemachFinder - Gemach Directory for Bergen County',
     description:
-      'Find free community lending services across Bergen County, Passaic County, and Rockland County. Baby gear, medical equipment, simcha supplies, interest-free loans, and more.',
+      'Find free community lending services across Bergen County and nearby communities. Baby gear, medical equipment, simcha supplies, interest-free loans, and more.',
     url: siteUrl(),
     type: 'website',
     siteName: 'GemachFinder',
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GemachFinder - Gemach Directory for Bergen, Passaic & Rockland Counties',
-    description: 'Find free community lending services across Bergen County, Passaic County, and Rockland County.',
+    title: 'GemachFinder - Gemach Directory for Bergen County',
+    description: 'Find free community lending services across Bergen County and nearby communities.',
     images: [OG_IMAGE],
   },
 }

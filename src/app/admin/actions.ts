@@ -161,6 +161,28 @@ function revalidateGemachPages(slug: string | null, location: string) {
   if (slug) revalidatePath(`/g/${slug}`)
 }
 
+async function uniqueGemachSlug(supabase: ReturnType<typeof getServiceClient>, name: string, requestedSlug?: string | null) {
+  const base =
+    (requestedSlug || name)
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '') || 'gemach'
+
+  let slug = base
+  for (let n = 2; n < 100; n++) {
+    const { data: existing, error } = await supabase
+      .from('gemachs')
+      .select('id')
+      .eq('slug', slug)
+      .maybeSingle()
+    if (error) throw error
+    if (!existing) return slug
+    slug = `${base}-${n}`
+  }
+
+  throw new Error('Could not create a unique slug')
+}
+
 function trimmedNullable(value: FormDataEntryValue | null): string | null {
   const next = String(value || '').trim()
   return next || null
@@ -172,6 +194,55 @@ function numericNullable(value: FormDataEntryValue | null): number | null {
   const next = Number(raw)
   if (!Number.isFinite(next)) return null
   return next
+}
+
+export async function createGemach(formData: FormData) {
+  if (!(await isAdmin())) redirect('/admin')
+  const supabase = getServiceClient()
+
+  const name = String(formData.get('name') || '').trim()
+  const category = String(formData.get('category') || '').trim()
+  const description = String(formData.get('description') || '').trim()
+  const location = String(formData.get('location') || '').trim()
+
+  if (!name || !category || !description || !location) {
+    throw new Error('name, category, description, and location are required')
+  }
+
+  const priority = Number(String(formData.get('priority') || '0').trim())
+  const slug = await uniqueGemachSlug(supabase, name, trimmedNullable(formData.get('slug')))
+
+  const { data: created, error } = await supabase
+    .from('gemachs')
+    .insert({
+      name,
+      category,
+      description,
+      location,
+      contact_name: trimmedNullable(formData.get('contact_name')),
+      contact_phone: trimmedNullable(formData.get('contact_phone')),
+      contact_email: trimmedNullable(formData.get('contact_email')),
+      contact_website: trimmedNullable(formData.get('contact_website')),
+      address: trimmedNullable(formData.get('address')),
+      hours: trimmedNullable(formData.get('hours')),
+      notes: trimmedNullable(formData.get('notes')),
+      slug,
+      photo_url: trimmedNullable(formData.get('photo_url')),
+      lat: numericNullable(formData.get('lat')),
+      lng: numericNullable(formData.get('lng')),
+      priority: Number.isFinite(priority) ? priority : 0,
+      verified: formData.get('verified') === 'on',
+      operator_confirmed: formData.get('operator_confirmed') === 'on',
+    })
+    .select('slug, location')
+    .maybeSingle()
+
+  if (error) throw error
+  if (!created) throw new Error('Gemach create failed')
+
+  revalidatePath('/admin')
+  revalidatePath('/admin/gemachs')
+  revalidateGemachPages(created.slug, created.location)
 }
 
 export async function updateGemach(id: string, formData: FormData) {
@@ -270,20 +341,7 @@ export async function approveSuggestion(id: string, formData: FormData) {
     throw new Error('name, category, description, and location are required')
   }
 
-  const baseSlug = name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-  let slug = baseSlug
-  for (let n = 2; n < 50; n++) {
-    const { data: existing } = await supabase
-      .from('gemachs')
-      .select('id')
-      .eq('slug', slug)
-      .maybeSingle()
-    if (!existing) break
-    slug = `${baseSlug}-${n}`
-  }
+  const slug = await uniqueGemachSlug(supabase, name)
 
   const { error: insertError } = await supabase.from('gemachs').insert({
     name,
@@ -304,7 +362,9 @@ export async function approveSuggestion(id: string, formData: FormData) {
   if (deleteError) throw deleteError
 
   revalidatePath('/admin/suggestions')
-  revalidatePath('/')
+  revalidatePath('/admin/gemachs')
+  revalidatePath('/admin')
+  revalidateGemachPages(slug, location)
 }
 
 export async function applyGemachUpdate(id: string, formData: FormData) {

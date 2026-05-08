@@ -2,8 +2,17 @@ import { cache } from 'react'
 import { createClient } from '@supabase/supabase-js'
 import type { Gemach } from './types'
 
-const EXCLUDED_PUBLIC_LOCATION = 'Monsey, NY'
-const EXCLUDED_PUBLIC_TEXT = /\bmonsey\b/i
+const TEMPORARILY_HIDDEN_PUBLIC_LOCATIONS = new Set([
+  'Passaic',
+  'Clifton',
+  'Monsey, NY',
+  'Spring Valley, NY',
+])
+
+const TEMPORARY_PUBLIC_TEXT_EXCLUSION =
+  /\b(passaic|clifton|rockland|monsey|spring valley)\b/i
+const TEMPORARY_PUBLIC_ADDRESS_EXCLUSION =
+  /\b(airmont|chestnut ridge|pomona|wesley hills|suffern|new city|nanuet|nyack)\b/i
 
 function anonClient() {
   return createClient(
@@ -13,9 +22,13 @@ function anonClient() {
 }
 
 function isPublicGemach(gemach: Gemach): boolean {
-  if (gemach.location === EXCLUDED_PUBLIC_LOCATION) return false
+  return !isTemporarilyHiddenCountyGemach(gemach)
+}
 
-  return ![
+function isTemporarilyHiddenCountyGemach(gemach: Gemach): boolean {
+  if (TEMPORARILY_HIDDEN_PUBLIC_LOCATIONS.has(gemach.location)) return true
+
+  if ([
     gemach.name,
     gemach.description,
     gemach.location,
@@ -25,7 +38,11 @@ function isPublicGemach(gemach: Gemach): boolean {
     gemach.address,
     gemach.notes,
     gemach.slug,
-  ].some((value) => value && EXCLUDED_PUBLIC_TEXT.test(value))
+  ].some((value) => value && TEMPORARY_PUBLIC_TEXT_EXCLUSION.test(value))) {
+    return true
+  }
+
+  return Boolean(gemach.address && TEMPORARY_PUBLIC_ADDRESS_EXCLUSION.test(gemach.address))
 }
 
 const getVerifiedGemachs = cache(async (): Promise<Gemach[]> => {
@@ -34,7 +51,6 @@ const getVerifiedGemachs = cache(async (): Promise<Gemach[]> => {
     .from('gemachs')
     .select('*')
     .eq('verified', true)
-    .neq('location', EXCLUDED_PUBLIC_LOCATION)
     .order('priority', { ascending: false })
   if (error) {
     console.error('getVerifiedGemachs error:', error)
@@ -53,7 +69,7 @@ export const getGemachBySlug = cache(async (slug: string): Promise<Gemach | null
 })
 
 export const getGemachsByLocation = cache(async (location: string): Promise<Gemach[]> => {
-  if (location === EXCLUDED_PUBLIC_LOCATION) return []
+  if (TEMPORARILY_HIDDEN_PUBLIC_LOCATIONS.has(location)) return []
   const gemachs = await getVerifiedGemachs()
   return gemachs.filter((gemach) => gemach.location === location)
 })

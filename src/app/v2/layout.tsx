@@ -6,7 +6,7 @@ import DarkScrollNav from './DarkScrollNav'
 import DarkBackToTop from './DarkBackToTop'
 
 export const metadata: Metadata = {
-  title: 'GemachFinder (Dark) - Gemach Directory for Bergen, Passaic & Rockland Counties',
+  title: 'GemachFinder (Dark) - Gemach Directory for Bergen County',
 }
 
 export default function V2Layout({ children }: { children: React.ReactNode }) {

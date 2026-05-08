@@ -210,8 +210,8 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
             <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.35 }}
               className="mt-5 text-base sm:text-lg text-white/40 max-w-xl mx-auto leading-relaxed">
-              The community directory of free lending services across Bergen County,
-              Passaic County, and Rockland County. Baby gear, medical equipment, simcha supplies, and more.
+              The community directory of free lending services across Bergen County and nearby
+              communities. Baby gear, medical equipment, simcha supplies, and more.
             </motion.p>
 
             {/* Scroll indicator */}
@@ -476,7 +476,7 @@ export default function V2Directory({ gemachs }: { gemachs: Gemach[] }) {
                 <span className="font-heading text-base font-bold text-white/80">GemachFinder</span>
               </Link>
               <p className="text-sm text-white/25 mt-3 leading-relaxed">
-                A community resource for Bergen, Passaic & Rockland Counties. {gemachs.length} verified gemachs and growing.
+                A community resource for Bergen County and nearby communities. {gemachs.length} verified gemachs and growing.
               </p>
             </div>
             <div className="flex gap-12">

@@ -7,7 +7,7 @@ export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'About - GemachFinder',
-  description: 'GemachFinder is a free, community-sourced directory of gemachs across Bergen, Passaic, and Rockland counties.',
+  description: 'GemachFinder is a free, community-sourced directory of gemachs across Bergen County and nearby communities.',
 }
 
 export default async function AboutPage() {
@@ -20,9 +20,9 @@ export default async function AboutPage() {
 
         <div className="space-y-5 text-slate-700 text-base sm:text-lg leading-relaxed">
           <p>
-            GemachFinder is a free community directory of gemachs serving Bergen County, Passaic County,
-            and Rockland County. A gemach is a volunteer-run lending service that provides anything from
-            baby gear to medical equipment to interest-free loans, at no cost.
+            GemachFinder is a free community directory of gemachs serving Bergen County and nearby
+            communities. A gemach is a volunteer-run lending service that provides anything from baby
+            gear to medical equipment to interest-free loans, at no cost.
           </p>
 
           <p>

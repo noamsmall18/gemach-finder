@@ -21,11 +21,9 @@ export default async function Home({
     name: 'GemachFinder',
     url: siteUrl(),
     logo: `${siteUrl()}/logo.png`,
-    description: `Free community lending directory with ${gemachs.length} verified gemachs across Bergen, Passaic, and Rockland Counties.`,
+    description: `Free community lending directory with ${gemachs.length} verified gemachs across Bergen County and nearby communities.`,
     areaServed: [
       { '@type': 'AdministrativeArea', name: 'Bergen County, NJ' },
-      { '@type': 'AdministrativeArea', name: 'Passaic County, NJ' },
-      { '@type': 'AdministrativeArea', name: 'Rockland County, NY' },
     ],
   }
 
